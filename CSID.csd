@@ -19,8 +19,8 @@
 <Cabbage>
 bounds(0, 0, 0, 0)
 
-;form caption("C-SID") size(800, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
-form caption("C-SID") size(800, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,0,255)
+;form caption("c-SID") size(800, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
+form caption("c-SID") size(800, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,0,255)
 keyboard bounds(2, 702, 798, 95) channel("keyboard")
 
 ;Volume Related
@@ -44,10 +44,12 @@ groupbox bounds(78, 8, 382, 224) channel("groupbox10007") text("Output")
 signaldisplay bounds(86, 32, 362, 187), , colour(0, 255, 0, 255), channel("signaldisplay14"), displayType("waveform"), signalVariable("aMix"), colour:0(0, 255, 0, 255), , zoom(3), 
 gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
-groupbox bounds(78, 238, 382, 452) channel("groupbox10014") text("Data Table")
-nslider bounds(90, 266, 57, 22) channel("note0")  range(38, 88, 72, 1, 1)
+;Pulse Width Modulator GUI elements
+groupbox bounds(78, 238, 195, 452) channel("groupbox10014") text("Data Table")
 
-label bounds(543, 651, 80, 16) channel("label10017") text("Test Label")
+hslider bounds(82, 662, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1)
+
+label bounds(644, 684, 152, 13) channel("label10017") text("Gavin Graham (c) 2020") fontStyle("plain")
 </Cabbage>
 
 <CsoundSynthesizer>
@@ -279,11 +281,14 @@ instr 1
 endin
 
 instr 2
+	; Set-up Pulse Width Modulation GUI Elements
     iX, iY init 0
     iWidgetCount init 0
     while iY < 16 do
+    	SWidget sprintf "bounds(%d, %d, 50, 16), channel(\"pwdatarow%d\"), text(\"%d: \") fontStyle(\"plain\") align(\"right\")", 20, 50+iY*22, iY, iY
+    	cabbageCreate "label", SWidget
         while iX < 3 do
-            SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"dataentry%d\"), range(0,100,0,1,1)", 50+iX*50, 50+iY*22, iWidgetCount
+            SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d\"), range(0,100,0,1,1)", 70+iX*50, 50+iY*22, iWidgetCount
             ;cabbageCreate "checkbox", SWidget
             cabbageCreate "nslider", SWidget
             iWidgetCount += 1
@@ -296,13 +301,14 @@ instr 2
     if metro(3) == 1 then
         kOnOff  = random:k(0, 100)
         kBox = random:k(0, 47)
-        SWidgetChannel sprintfk "dataentry%d", kBox
+        SWidgetChannel sprintfk "pwdataentry%d", kBox
         cabbageSetValue SWidgetChannel, kOnOff
         ;event "i", "Synth", 0, 2, int(kBox), kOnOff
     endif
 endin
 
 </CsInstruments>
+
 <CsScore>
 ;Waveform function tables
 f 16    0   512     7   -1 256 1 256 -1 ;Triangle (0x10)
@@ -311,4 +317,5 @@ f 64 	0 	1024 	7 	1 512 1 0 -1 512 -1 ;Square (0x40)
 ;causes Csound to run for about 7000 years...
 f0 z
 </CsScore>
+
 </CsoundSynthesizer>
