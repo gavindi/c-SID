@@ -1,0 +1,9 @@
+2022-06-25	Gavin Graham <gavindi@gmail.com>
+	* Inital Git push.
+	* Four basic waveforms and any combinations thereof are working
+	  though not exact nor even close at this stage to the MOS6581
+	  waveforms.
+	* Working ADSR.
+	* Partly functional GUI.  ADSR works.  Setting-up Wavetable entries.
+	* Mini in functional but error prone with phantom notes.
+

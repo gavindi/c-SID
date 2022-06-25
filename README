@@ -1,0 +1,8 @@
+This is c-SID, a VST developed using the csound and cabbage audio frameworks.
+
+c-SID imitates (and will eventually emulate) the MOS6581 SID (Sound Interface 
+Device). This chip was used in the Commodore 64 computer.  c-SID provides 
+wavetable control of the MOS6581 to create complex sounds using the same 
+matured techniques that Commodore 64 music player routines came to use.
+
+
