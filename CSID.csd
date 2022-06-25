@@ -51,7 +51,7 @@ hslider bounds(82, 662, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) 
 
 label bounds(644, 684, 152, 13) channel("label10017") text("Gavin Graham (c) 2020") fontStyle("plain")
 </Cabbage>
-
+//  ---------------------------------------------------------------------------
 <CsoundSynthesizer>
     <CsOptions>
         ;-n --displays -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5
@@ -93,28 +93,28 @@ giEnvAttack[] fillarray 0.002, 0.008, 0.016, 0.024, 0.038, 0.056, 0.068, 0.080, 
 giEnvDecayRelease[] fillarray 0.006, 0.024, 0.048, 0.072, 0.114, 0.168, 0.204, 0.24, 0.3, 0.75, 1.5, 2.4, 3, 9, 15, 24
 
 						
-giPWTable01[][] init 16,3
+gkPWTable01[][] init 16,3
 						;Absolute Val or -1 to loop|Phase/Index|Count/Delay
-giPWTable01 fillarray	1, 40, 20,
+gkPWTable01 fillarray	1, 40, 20,
 						0, 10, 10,
 						0, -10, 10,
 						-1, 1, 0
 
-giFREQTable01[][] init 16,3
-giFREQTable02[][] init 16,3
-giFREQTable01 fillarray	0, 0, 17,
+gkFREQTable01[][] init 16,3
+gkFREQTable02[][] init 16,3
+gkFREQTable01 fillarray	0, 0, 17,
 						0, 0.6, 2,
 						0, -0.6, 2,
 						-1, 1, 0,
 						0, 0, -1
-giFREQTable02 fillarray	0, 0, 0,
+gkFREQTable02 fillarray	0, 0, 0,
 						4, 0, 0,
 						7, 0, 0,
 						-1, 1, 0,
 						0, 0, -1
 						
-giWFTable01[][] init 16,3
-giWFTable01 fillarray	16, 0, 2,
+gkWFTable01[][] init 16,3
+gkWFTable01 fillarray	16, 0, 2,
 						64, 0, 10,
 						-1, 1, 0,
 						0, 0, -1
@@ -176,16 +176,16 @@ instr 1
 		kPWDelayCounter = kPWDelayCounter - 1
 		if kPWDelayCounter < 0 then
 			kPWTableIndex = kPWTableIndex + 1
-			if giPWTable01[kPWTableIndex][0] = -1 then
-				kPWTableIndex = giPWTable01[kPWTableIndex][1]
+			if gkPWTable01[kPWTableIndex][0] = -1 then
+				kPWTableIndex = gkPWTable01[kPWTableIndex][1]
 			endif
-			kPWDelayCounter = giPWTable01[kPWTableIndex][2]
-			kPWPhaseIndex = giPWTable01[kPWTableIndex][1]
-			if giPWTable01[kPWTableIndex][0] > 0 then
-				kPulseWidth = giPWTable01[kPWTableIndex][0]
+			kPWDelayCounter = gkPWTable01[kPWTableIndex][2]
+			kPWPhaseIndex = gkPWTable01[kPWTableIndex][1]
+			if gkPWTable01[kPWTableIndex][0] > 0 then
+				kPulseWidth = gkPWTable01[kPWTableIndex][0]
 			endif
 		else
-			kPulseWidth = kPulseWidth + giPWTable01[kPWTableIndex][1]
+			kPulseWidth = kPulseWidth + gkPWTable01[kPWTableIndex][1]
 		endif
 	endif
 	
@@ -194,14 +194,14 @@ instr 1
 		kFREQDelayCounter = kFREQDelayCounter - 1
 		if kFREQDelayCounter < 0 then
 			kFREQTableIndex = kFREQTableIndex + 1
-			if giFREQTable01[kFREQTableIndex][0] = -1 then
-				kFREQTableIndex = giFREQTable01[kFREQTableIndex][1]
+			if gkFREQTable01[kFREQTableIndex][0] = -1 then
+				kFREQTableIndex = gkFREQTable01[kFREQTableIndex][1]
 			endif
-			kFREQDelayCounter = giFREQTable01[kFREQTableIndex][2]
-			kNote = iMidiNote + giFREQTable01[kFREQTableIndex][0]
+			kFREQDelayCounter = gkFREQTable01[kFREQTableIndex][2]
+			kNote = iMidiNote + gkFREQTable01[kFREQTableIndex][0]
 			kFREQ mtof kNote
 		endif
-		kFREQ = kFREQ + giFREQTable01[kFREQTableIndex][1]
+		kFREQ = kFREQ + gkFREQTable01[kFREQTableIndex][1]
 	endif
 	
 	; Waveform Modulator
@@ -209,11 +209,11 @@ instr 1
 		kWFDelayCounter = kWFDelayCounter -1
 		if kWFDelayCounter < 0 then
 			kWFTableIndex = kWFTableIndex +1
-			if giWFTable01[kWFTableIndex][0] = -1 then
-				kWFTableIndex = giWFTable01[kWFTableIndex][1]
+			if gkWFTable01[kWFTableIndex][0] = -1 then
+				kWFTableIndex = gkWFTable01[kWFTableIndex][1]
 			endif
-			kWFDelayCounter = giWFTable01[kWFTableIndex][2]
-			kWaveform = giWFTable01[kWFTableIndex][0]
+			kWFDelayCounter = gkWFTable01[kWFTableIndex][2]
+			kWaveform = gkWFTable01[kWFTableIndex][0]
 		endif
 	endif
 
@@ -252,7 +252,7 @@ instr 1
 	aMix = aOut*kEnv
 	outs aMix, aMix
     
-	display	aMix, .1, 1
+	display	aMix, .01, 2
     
 	;if kWaveformchanged == 1 then
 		;cabbageSet  "gentable1", "tableNumber", kWaveform
@@ -308,7 +308,7 @@ instr 2
 endin
 
 </CsInstruments>
-
+//  ---------------------------------------------------------------------------
 <CsScore>
 ;Waveform function tables
 f 16    0   512     7   -1 256 1 256 -1 ;Triangle (0x10)
