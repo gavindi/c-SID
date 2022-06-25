@@ -28,28 +28,30 @@ vmeter bounds(18, 6, 35, 220) channel("vMeter1")  overlayColour(0, 0, 0, 255) me
 rslider bounds(4, 230, 60, 60) channel("rslider10015") range(0, 1, 0, 1, 0.001) text("Volume") valueTextBox(1)
 
 ;Manual adjusters
-groupbox bounds(566, 240, 228, 185) channel("groupbox10016") text("Adjusters")
-hslider bounds(572, 266, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 255, 255, 255) colour(0, 255, 0, 255)
-hslider bounds(572, 316, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 255, 255, 255) colour(0, 255, 0, 255)
-hslider bounds(572, 366, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 255, 255, 255) colour(0, 255, 0, 255)
+groupbox bounds(304, 8, 228, 185) channel("groupbox10016") text("Adjusters")
+hslider bounds(310, 34, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 255, 255, 255) colour(0, 255, 0, 255)
+hslider bounds(310, 84, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 255, 255, 255) colour(0, 255, 0, 255)
+hslider bounds(310, 134, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 255, 255, 255) colour(0, 255, 0, 255)
 
-groupbox bounds(566, 430, 227, 187) channel("groupbox10006") text("Envelope")
-vslider bounds(580, 460, 50, 150) channel("V1EnvAttack") range(0, 15, 0, 1, 1) text("Attack") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
-vslider bounds(630, 460, 50, 150) channel("V1EnvDecay") range(0, 15, 7, 1, 1) text("Decay") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
-vslider bounds(680, 460, 50, 150) channel("V1EnvSustain") range(1, 15, 6, 1, 1) text("Sustain") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
-vslider bounds(730, 460, 50, 150) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
+groupbox bounds(70, 6, 227, 187) channel("groupbox10006") text("Envelope")
+vslider bounds(84, 36, 50, 150) channel("V1EnvAttack") range(0, 15, 0, 1, 1) text("Attack") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
+vslider bounds(132, 36, 50, 150) channel("V1EnvDecay") range(0, 15, 7, 1, 1) text("Decay") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
+vslider bounds(182, 36, 50, 150) channel("V1EnvSustain") range(1, 15, 6, 1, 1) text("Sustain") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
+vslider bounds(232, 36, 50, 150) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(0, 255, 0, 255) trackerColour(0, 255, 255, 255)
 
 ;Display
-groupbox bounds(78, 8, 382, 224) channel("groupbox10007") text("Output")
-signaldisplay bounds(86, 32, 362, 187), , colour(0, 255, 0, 255), channel("signaldisplay14"), displayType("waveform"), signalVariable("aMix"), colour:0(0, 255, 0, 255), , zoom(3), 
-gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
+groupbox bounds(540, 8, 252, 224) channel("groupbox10007") text("Output")
+signaldisplay bounds(552, 32, 229, 187), , colour(0, 255, 0, 255), channel("signaldisplay14"), displayType("waveform"), signalVariable("aMix"), colour:0(0, 255, 0, 255), , zoom(3), 
+;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
 ;Pulse Width Modulator GUI elements
-groupbox bounds(78, 238, 195, 452) channel("groupbox10014") text("Data Table")
+groupbox bounds(78, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator")
+label bounds(110, 264, 50, 16) channel("pwdutylabel") text("Width") fontStyle("plain")
+label bounds(160, 264, 50, 16) channel("pwamplabel") text("Amp") fontStyle("plain")
+label bounds(210, 264, 50, 16) channel("pwwaitlabel") text("Wait") fontStyle("plain")
+hslider bounds(86, 640, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1)
 
-hslider bounds(82, 662, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1)
-
-label bounds(644, 684, 152, 13) channel("label10017") text("Gavin Graham (c) 2020") fontStyle("plain")
+label bounds(644, 684, 152, 13) channel("vanity01") text("Gavin Graham (c) 2020") fontStyle("plain")
 </Cabbage>
 //  ---------------------------------------------------------------------------
 <CsoundSynthesizer>
@@ -282,16 +284,18 @@ endin
 
 instr 2
 	; Set-up Pulse Width Modulation GUI Elements
+	iXPos = 90
+	iYPos = 280
+  
     iX, iY init 0
-    iWidgetCount init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 50, 16), channel(\"pwdatarow%d\"), text(\"%d: \") fontStyle(\"plain\") align(\"right\")", 20, 50+iY*22, iY, iY
+    	SWidget sprintf "bounds(%d, %d, 50, 16), channel(\"pwrowlbl%d\"), text(\"%d: \") fontStyle(\"plain\") align(\"right\")", iXPos-30, iYPos+iY*22, iY, iY
     	cabbageCreate "label", SWidget
         while iX < 3 do
-            SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d\"), range(0,100,0,1,1)", 70+iX*50, 50+iY*22, iWidgetCount
-            ;cabbageCreate "checkbox", SWidget
+            SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-%d\"), range(0,100,0,1,1)", iXPos+20+iX*50, iYPos+iY*22, iY, iX
             cabbageCreate "nslider", SWidget
-            iWidgetCount += 1
+            SWidgetChannel sprintfk "pwdataentry%d-%d", iY, iX
+            cabbageSetValue SWidgetChannel, gkPWTable01[iY][iX]
             iX += 1
         od
         iX = 0
@@ -299,10 +303,10 @@ instr 2
     od
 
     if metro(3) == 1 then
-        kOnOff  = random:k(0, 100)
-        kBox = random:k(0, 47)
-        SWidgetChannel sprintfk "pwdataentry%d", kBox
-        cabbageSetValue SWidgetChannel, kOnOff
+        ;kOnOff  = random:k(0, 100)
+        ;kBox = random:k(0, 47)
+        ;SWidgetChannel sprintfk "pwdataentry%d", kBox
+        ;cabbageSetValue SWidgetChannel, kOnOff
         ;event "i", "Synth", 0, 2, int(kBox), kOnOff
     endif
 endin
@@ -310,11 +314,14 @@ endin
 </CsInstruments>
 //  ---------------------------------------------------------------------------
 <CsScore>
+
 ;Waveform function tables
 f 16    0   512     7   -1 256 1 256 -1 ;Triangle (0x10)
 f 32 	0 	512 	7 	-1 512 1 ;Sawtooth (0x20)
 f 64 	0 	1024 	7 	1 512 1 0 -1 512 -1 ;Square (0x40)
+
 ;causes Csound to run for about 7000 years...
+i2 0 z
 f0 z
 </CsScore>
 
