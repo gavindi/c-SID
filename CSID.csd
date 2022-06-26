@@ -20,7 +20,7 @@
 bounds(0, 0, 0, 0)
 
 ;form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
-form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255)
+form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,0,255)
 keyboard bounds(1, 702, 999, 95) channel("keyboard")
 
 ;Volume Related
