@@ -20,46 +20,47 @@
 bounds(0, 0, 0, 0)
 
 ;form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
-form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,0,255)
+form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255)
 keyboard bounds(1, 702, 999, 95) channel("keyboard")
 
 ;Volume Related
-vmeter bounds(18, 6, 35, 220) channel("vMeter1")  overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(128, 128, 128)
-rslider bounds(4, 230, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255)
+vmeter bounds(18, 8, 35, 224) channel("vMeter1")  overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(128, 128, 128)
+rslider bounds(4, 238, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255)
 
 ;Manual adjusters
-groupbox bounds(304, 8, 228, 185) channel("adjustersgroup1") text("Adjusters") outlineColour(16, 16, 16)
-hslider bounds(310, 34, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255)
-hslider bounds(310, 84, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255)
-hslider bounds(310, 134, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255)
+groupbox bounds(304, 8, 228, 224) channel("adjustersgroup1") text("Adjusters") outlineColour(16, 16, 16)
+hslider bounds(6, 36, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
+hslider bounds(6, 86, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
+hslider bounds(6, 136, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
 
-groupbox bounds(70, 6, 227, 187) channel("envelopegroup1") text("Envelope") outlineColour(16, 16, 16)
-vslider bounds(84, 36, 50, 150) channel("V1EnvAttack") range(0, 15, 0, 1, 1) text("Attack") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255)
-vslider bounds(132, 36, 50, 150) channel("V1EnvDecay") range(0, 15, 7, 1, 1) text("Decay") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255)
-vslider bounds(182, 36, 50, 150) channel("V1EnvSustain") range(1, 15, 6, 1, 1) text("Sustain") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255)
-vslider bounds(232, 36, 50, 150) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255)
+;Envelope (ADSR)
+groupbox bounds(70, 8, 227, 224) channel("envelopegroup1") text("Envelope") outlineColour(16, 16, 16)
+vslider bounds(14, 30, 50, 180) channel("V1EnvAttack") range(0, 15, 0, 1, 1) text("Attack") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
+vslider bounds(64, 30, 50, 180) channel("V1EnvDecay") range(0, 15, 7, 1, 1) text("Decay") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
+vslider bounds(114, 30, 50, 180) channel("V1EnvSustain") range(1, 15, 6, 1, 1) text("Sustain") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
+vslider bounds(165, 30, 50, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
 
 ;Display
-groupbox bounds(540, 8, 252, 224) channel("waveformdisp01") text("Output") outlineColour(16, 16, 16)
-signaldisplay bounds(552, 32, 229, 187), , colour(0, 255, 0, 255), channel("signaldisplay14"), displayType("waveform"), signalVariable("aMix"), colour:0(0, 255, 0, 255), , zoom(3), 
+groupbox bounds(740, 8, 252, 224) channel("waveformdisp01") text("Oscilloscope") outlineColour(16, 16, 16)
+signaldisplay bounds(5, 32, 229, 187), , colour(0, 255, 0, 255), channel("signaldisplay14"), displayType("waveform"), signalVariable("aMix"), colour:0(0, 255, 0, 255), , zoom(3), backgroundColour:0(0, 0, 0, 255), parent("waveformdisp01") 
 ;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
 ;Waveform Modulator GUI elements
-groupbox bounds(78, 238, 195, 430) channel("wftablegroup") text("Waveform Modulator") outlineColour(16, 16, 16)
+groupbox bounds(70, 238, 195, 430) channel("wftablegroup") text("Waveform Modulator") outlineColour(16, 16, 16)
 label bounds(32, 30, 50, 10) channel("wfwavelabel") text("Wave") fontStyle("plain") parent("wftablegroup")
 label bounds(80, 30, 50, 10) channel("wfamplabel") text("Amp") fontStyle("plain") parent("wftablegroup")
 label bounds(130, 30, 50, 10) channel("wfwaitlabel") text("Wait") fontStyle("plain") parent("wftablegroup")
 hslider bounds(16, 400, 186, 25) channel("wftableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("wftablegroup")
 
 ;Pulse Width Modulator GUI elements
-groupbox bounds(498, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator") outlineColour(16, 16, 16)
+groupbox bounds(490, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator") outlineColour(16, 16, 16)
 label bounds(32, 30, 50, 10) channel("pwdutylabel") text("Width") fontStyle("plain") parent("pwmtablegroup")
 label bounds(80, 30, 50, 10) channel("pwamplabel") text("Amp") fontStyle("plain") parent("pwmtablegroup")
 label bounds(130, 30, 50, 10) channel("pwwaitlabel") text("Wait") fontStyle("plain") parent("pwmtablegroup")
 hslider bounds(16, 400, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("pwmtablegroup")
 
 ;Frequency Modulator GUI elements
-groupbox bounds(288, 238, 195, 430) channel("freqtablegroup") text("Frequency Modulator") outlineColour(16, 16, 16)
+groupbox bounds(280, 238, 195, 430) channel("freqtablegroup") text("Frequency Modulator") outlineColour(16, 16, 16)
 label bounds(32, 30, 50, 10) channel("freqfreqlabel") text("Freq") fontStyle("plain") parent("freqtablegroup")
 label bounds(80, 30, 50, 10) channel("freqamplabel") text("Amp") fontStyle("plain") parent("freqtablegroup")
 label bounds(130, 30, 50, 10) channel("freqwaitlabel") text("Wait") fontStyle("plain") parent("freqtablegroup")
