@@ -25,7 +25,7 @@ keyboard bounds(1, 702, 999, 95) channel("keyboard")
 
 ;Volume Related
 vmeter bounds(18, 6, 35, 220) channel("vMeter1")  overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(128, 128, 128)
-rslider bounds(4, 230, 60, 60) channel("mastervolume") range(0, 1, 1, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16)
+rslider bounds(4, 230, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255)
 
 ;Manual adjusters
 groupbox bounds(304, 8, 228, 185) channel("adjustersgroup1") text("Adjusters") outlineColour(16, 16, 16)
@@ -44,26 +44,26 @@ groupbox bounds(540, 8, 252, 224) channel("waveformdisp01") text("Output") outli
 signaldisplay bounds(552, 32, 229, 187), , colour(0, 255, 0, 255), channel("signaldisplay14"), displayType("waveform"), signalVariable("aMix"), colour:0(0, 255, 0, 255), , zoom(3), 
 ;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
+;Waveform Modulator GUI elements
+groupbox bounds(78, 238, 195, 430) channel("wftablegroup") text("Waveform Modulator") outlineColour(16, 16, 16)
+label bounds(32, 30, 50, 10) channel("wfwavelabel") text("Wave") fontStyle("plain") parent("wftablegroup")
+label bounds(80, 30, 50, 10) channel("wfamplabel") text("Amp") fontStyle("plain") parent("wftablegroup")
+label bounds(130, 30, 50, 10) channel("wfwaitlabel") text("Wait") fontStyle("plain") parent("wftablegroup")
+hslider bounds(16, 400, 186, 25) channel("wftableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("wftablegroup")
+
 ;Pulse Width Modulator GUI elements
-groupbox bounds(78, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator") outlineColour(16, 16, 16)
-label bounds(110, 264, 50, 16) channel("pwdutylabel") text("Width") fontStyle("plain")
-label bounds(160, 264, 50, 16) channel("pwamplabel") text("Amp") fontStyle("plain")
-label bounds(210, 264, 50, 16) channel("pwwaitlabel") text("Wait") fontStyle("plain")
-hslider bounds(86, 640, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255)
+groupbox bounds(498, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator") outlineColour(16, 16, 16)
+label bounds(32, 30, 50, 10) channel("pwdutylabel") text("Width") fontStyle("plain") parent("pwmtablegroup")
+label bounds(80, 30, 50, 10) channel("pwamplabel") text("Amp") fontStyle("plain") parent("pwmtablegroup")
+label bounds(130, 30, 50, 10) channel("pwwaitlabel") text("Wait") fontStyle("plain") parent("pwmtablegroup")
+hslider bounds(16, 400, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("pwmtablegroup")
 
 ;Frequency Modulator GUI elements
 groupbox bounds(288, 238, 195, 430) channel("freqtablegroup") text("Frequency Modulator") outlineColour(16, 16, 16)
-label bounds(320, 264, 50, 16) channel("freqfreqlabel") text("Freq") fontStyle("plain")
-label bounds(370, 264, 50, 16) channel("freqamplabel") text("Amp") fontStyle("plain")
-label bounds(420, 264, 50, 16) channel("freqwaitlabel") text("Wait") fontStyle("plain")
-hslider bounds(296, 640, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255)
-
-;Waveform Modulator GUI elements
-groupbox bounds(498, 238, 195, 430) channel("wftablegroup") text("Waveform Modulator") outlineColour(16, 16, 16)
-label bounds(530, 264, 50, 16) channel("wfwavelabel") text("Wave") fontStyle("plain")
-label bounds(580, 264, 50, 16) channel("wfamplabel") text("Amp") fontStyle("plain")
-label bounds(630, 264, 50, 16) channel("wfwaitlabel") text("Wait") fontStyle("plain")
-hslider bounds(506, 640, 186, 25) channel("wftableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255)
+label bounds(32, 30, 50, 10) channel("freqfreqlabel") text("Freq") fontStyle("plain") parent("freqtablegroup")
+label bounds(80, 30, 50, 10) channel("freqamplabel") text("Amp") fontStyle("plain") parent("freqtablegroup")
+label bounds(130, 30, 50, 10) channel("freqwaitlabel") text("Wait") fontStyle("plain") parent("freqtablegroup")
+hslider bounds(16, 400, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("freqtablegroup")
 
 label bounds(846, 682, 152, 13) channel("vanity01") text("Gavin Graham (c) 2020") align("right") fontColour(32, 32, 32)
 </Cabbage>
@@ -149,6 +149,7 @@ instr 1
 	aSAW init 0
 	aPUL init 0
 	aNOI init 0
+	kmasterVolume init 1
 	
 	; Pulse Width Modulator
 	kPWTableIndex init -1
@@ -265,7 +266,9 @@ instr 1
     
 	aOut sum aTRI, aSAW, aPUL, aNOI 
 	kEnv madsr giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease]
-	aMix = aOut*kEnv
+	kmasterVolume cabbageGetValue "mastervolume"
+	kmasterVolume = kmasterVolume / 15
+	aMix = aOut*kEnv*kmasterVolume
 	outs aMix, aMix
     
 	display	aMix, .01, 2
@@ -296,69 +299,79 @@ instr 1
 	*/
 endin
 
-instr 2
+instr GUI
 	; Set-up Pulse Width Modulation GUI Elements
 	
 	;Y position is consistent across all data entry fields.
-	iYPos = 280
 
-	iXPos = 60
+	;iXPos = 60
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 50, 16), channel(\"pwdatarow%d\"), text(\"%d: \") fontStyle(\"plain\") align(\"right\")", iXPos, iYPos+iY*22, iY, iY
-    	cabbageCreate "label", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(16, 16, 16)", iXPos+1*50, iYPos+iY*22, iY
+    	SWidget sprintf "bounds(%d, %d, 50, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\")", -20, 48+iY*22, iY, iY
+    	cabbageCreate "label", SWidget	
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+1*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16)", iXPos+2*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+2*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16)", iXPos+3*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+3*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidgetChannel sprintfk "pwdataentry%d-2", iY
-		cabbageSetValue SWidgetChannel, gkPWTable01[iY][2]
 		iY += 1
 	od
 	
 	; Set-up Frequency Modulation GUI elements
-	iXPos = 270
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 50, 16), channel(\"freqdatarow%d\"), text(\"%d: \") fontStyle(\"plain\") align(\"right\")", iXPos, iYPos+iY*22, iY, iY
+    	SWidget sprintf "bounds(%d, %d, 50, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\")", -20, 48+iY*22, iY, iY
     	cabbageCreate "label", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16)", iXPos+1*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+1*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16)", iXPos+2*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+2*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16)", iXPos+3*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+3*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidgetChannel sprintfk "freqdataentry%d-2", iY
-		cabbageSetValue SWidgetChannel, gkFREQTable01[iY][2]
 		iY += 1
 	od
 	
 	; Set-up Waveform Modulation GUI elements
-	iXPos = 480
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 50, 16), channel(\"wfdatarow%d\"), text(\"%d: \") fontStyle(\"plain\") align(\"right\")", iXPos, iYPos+iY*22, iY, iY
+    	SWidget sprintf "bounds(%d, %d, 50, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\")", -20, 48+iY*22, iY, iY
     	cabbageCreate "label", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16)", iXPos+1*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+1*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16)", iXPos+2*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+2*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16)", iXPos+3*50, iYPos+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+3*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidgetChannel sprintfk "wfdataentry%d-2", iY
-		cabbageSetValue SWidgetChannel, gkWFTable01[iY][2]
 		iY += 1
 	od
 
     if metro(3) == 1 then
-        ;kOnOff  = random:k(0, 100)
-        ;kBoxY = random:k(0, 15)
-        ;kBoxX = random:k(0, 2)
-        ;SWidgetChannel sprintfk "pwdataentry%d-%d", kBoxY, kBoxX
-        ;cabbageSetValue SWidgetChannel, kOnOff
-        ;;event "i", "Synth", 0, 2, int(kBox), kOnOff
+    	kY init 0
+    	printk2 kY
+    	while kY < 16 do
+    		SWidgetChannel sprintfk "pwdataentry%d-0", kY
+			cabbageSetValue SWidgetChannel, gkPWTable01[kY][0]
+			SWidgetChannel sprintfk "pwdataentry%d-1", kY
+			cabbageSetValue SWidgetChannel, gkPWTable01[kY][1]
+			SWidgetChannel sprintfk "pwdataentry%d-2", kY
+			cabbageSetValue SWidgetChannel, gkPWTable01[kY][2]
+			
+			SWidgetChannel sprintfk "freqdataentry%d-0", kY
+			cabbageSetValue SWidgetChannel, gkFREQTable01[kY][0]
+			SWidgetChannel sprintfk "freqdataentry%d-1", kY
+			cabbageSetValue SWidgetChannel, gkFREQTable01[kY][1]
+			SWidgetChannel sprintfk "freqdataentry%d-2", kY
+			cabbageSetValue SWidgetChannel, gkFREQTable01[kY][2]
+			
+			SWidgetChannel sprintfk "wfdataentry%d-0", kY
+			cabbageSetValue SWidgetChannel, gkWFTable01[kY][0]
+			SWidgetChannel sprintfk "wfdataentry%d-1", kY
+			cabbageSetValue SWidgetChannel, gkWFTable01[kY][1]
+			SWidgetChannel sprintfk "wfdataentry%d-2", kY
+			cabbageSetValue SWidgetChannel, gkWFTable01[kY][2]
+        	kY += 1
+        od
     endif
 endin
 
@@ -372,7 +385,7 @@ f 32 	0 	512 	7 	-1 512 1 ;Sawtooth (0x20)
 f 64 	0 	1024 	7 	1 512 1 0 -1 512 -1 ;Square (0x40)
 
 ;causes Csound to run for about 7000 years...
-i2 0 z
+i "GUI" 0 z
 ;f0 z
 </CsScore>
 
