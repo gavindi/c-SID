@@ -143,7 +143,7 @@ giPUL = 64
 giNOI = 128
 
 ;instrument will be triggered by keyboard widget or MIDI event
-instr 1
+instr DRIVER
 	aOut init 0
 	aMix init 0
 	aTRI init 0
@@ -154,18 +154,21 @@ instr 1
 	
 	; Pulse Width Modulator
 	kPWTableIndex init -1
+	kPWIndexOld init 0
 	kPWDelayCounter init 0
 	kPWPhaseIndex init 0
 	kPulseWidth init 0
 	
 	; Frequency Modulator
 	kFREQTableIndex init -1
+	kFREQIndexOld init 0
 	kFREQDelayCounter init 0
 	kNote init 0
 	kFREQ init 0
 	
 	; Waveform Modulator
 	kWFTableIndex init -1
+	kWFIndexOld init 0
 	kWFDelayCounter init 0
 	kWF init 0
  
@@ -187,13 +190,14 @@ instr 1
 	;kWaveform cabbageGetValue "V1Waveform"
 	;kWaveformchanged changed kWaveform	
 	;kPulseWidth cabbageGetValue "V1PulseWidth"
-	printk2 kNoteRelease
+	;printk2 kNoteRelease
 	
 	; Pulse Width Modulator
 	if kPWDelayCounter != -1 then
-		kPWDelayCounter = kPWDelayCounter - 1
+		kPWIndexOld = kPWTableIndex
+		kPWDelayCounter -= 1
 		if kPWDelayCounter < 0 then
-			kPWTableIndex = kPWTableIndex + 1
+			kPWTableIndex += 1
 			if gkPWTable01[kPWTableIndex][0] = -1 then
 				kPWTableIndex = gkPWTable01[kPWTableIndex][1]
 			endif
@@ -203,15 +207,23 @@ instr 1
 				kPulseWidth = gkPWTable01[kPWTableIndex][0]
 			endif
 		else
-			kPulseWidth = kPulseWidth + gkPWTable01[kPWTableIndex][1]
+			kPulseWidth += gkPWTable01[kPWTableIndex][1]
 		endif
+		;kPWIndexTrig changed kPWTableIndex
+		if kPWIndexOld != kPWTableIndex then
+			SWidgetChannel sprintfk "pwdatarow%d", kPWIndexOld
+    		cabbageSet 1, SWidgetChannel, "colour", 64, 64, 46, 128
+    	endif
+		SWidgetChannel sprintfk "pwdatarow%d", kPWTableIndex
+    	cabbageSet 1, SWidgetChannel, "colour", 255, 255, 255, 64
 	endif
 	
 	; Note & Frequency Modulator
 	if kFREQDelayCounter != -1 then
-		kFREQDelayCounter = kFREQDelayCounter - 1
+		kFREQIndexOld = kFREQTableIndex
+		kFREQDelayCounter -= 1
 		if kFREQDelayCounter < 0 then
-			kFREQTableIndex = kFREQTableIndex + 1
+			kFREQTableIndex += 1
 			if gkFREQTable01[kFREQTableIndex][0] = -1 then
 				kFREQTableIndex = gkFREQTable01[kFREQTableIndex][1]
 			endif
@@ -219,19 +231,32 @@ instr 1
 			kNote = iMidiNote + gkFREQTable01[kFREQTableIndex][0]
 			kFREQ mtof kNote
 		endif
-		kFREQ = kFREQ + gkFREQTable01[kFREQTableIndex][1]
+		kFREQ += gkFREQTable01[kFREQTableIndex][1]
+		if kFREQIndexOld != kFREQTableIndex then
+			SWidgetChannel sprintfk "freqdatarow%d", kFREQIndexOld
+    		cabbageSet 1, SWidgetChannel, "colour", 64, 64, 46, 128
+    	endif
+		SWidgetChannel sprintfk "freqdatarow%d", kFREQTableIndex
+    	cabbageSet 1, SWidgetChannel, "colour", 255, 255, 255, 64
 	endif
 	
 	; Waveform Modulator
 	if kWFDelayCounter != -1 then
-		kWFDelayCounter = kWFDelayCounter -1
+		kWFIndexOld = kWFTableIndex
+		kWFDelayCounter -= 1
 		if kWFDelayCounter < 0 then
-			kWFTableIndex = kWFTableIndex +1
+			kWFTableIndex += 1
 			if gkWFTable01[kWFTableIndex][0] = -1 then
 				kWFTableIndex = gkWFTable01[kWFTableIndex][1]
 			endif
 			kWFDelayCounter = gkWFTable01[kWFTableIndex][2]
 			kWaveform = gkWFTable01[kWFTableIndex][0]
+			if kWFIndexOld != kWFTableIndex then
+				SWidgetChannel sprintfk "wfdatarow%d", kWFIndexOld
+    			cabbageSet 1, SWidgetChannel, "colour", 64, 64, 46, 128
+    		endif
+			SWidgetChannel sprintfk "wfdatarow%d", kWFTableIndex
+    		cabbageSet 1, SWidgetChannel, "colour", 255, 255, 255, 64
 		endif
 	endif
 
@@ -267,6 +292,7 @@ instr 1
     
 	aOut sum aTRI, aSAW, aPUL, aNOI 
 	kEnv madsr giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease]
+
 	kmasterVolume cabbageGetValue "mastervolume"
 	kmasterVolume = kmasterVolume / 15
 	aMix = aOut*kEnv*kmasterVolume
@@ -308,11 +334,11 @@ instr GUI
 	;iXPos = 60
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 50, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\")", -20, 48+iY*22, iY, iY
+    	SWidget sprintf "bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY
     	cabbageCreate "label", SWidget	
 		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+1*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+2*50, 42+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+2*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
 		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+3*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
@@ -322,11 +348,11 @@ instr GUI
 	; Set-up Frequency Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 50, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\")", -20, 48+iY*22, iY, iY
+    	SWidget sprintf "bounds(%d, %d, 16, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY
     	cabbageCreate "label", SWidget
 		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+1*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+2*50, 42+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+2*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
 		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+3*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
@@ -336,11 +362,11 @@ instr GUI
 	; Set-up Waveform Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 50, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\")", -20, 48+iY*22, iY, iY
+    	SWidget sprintf "bounds(%d, %d, 16, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY
     	cabbageCreate "label", SWidget
 		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+1*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+2*50, 42+iY*22, iY
+		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+2*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
 		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+3*50, 42+iY*22, iY
 		cabbageCreate "nslider", SWidget
