@@ -318,21 +318,7 @@ instr 1024
 	if kEnvChanged == 1 then
 		cabbageSetValue "vMeter1", kEnv
 	endif
-	/*
-	;Update tables from GUI number boxes
-	kY init 0
-   	kGUITrig init 0
-    printk2 kY
-    while kY < 16 do
-    	SWidgetChannel sprintfk "pwdataentry%d-0", kY
-    	kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
-		if kGUITrig != 0 then
-    		kdebug4 cabbageGetValue SWidgetChannel
-   			printk2 kdebug4
-   		endif
-        kY += 1
-    od
-    */
+
     /*
 	kstatus, kchan, kdata1, kdata2  midiin              ;read in midi
 	ktrigger changed kstatus, kchan, kdata1, kdata2     ;trigger if midi data change
@@ -415,7 +401,6 @@ instr 2048
     if metro(3) == 1 then
 		kY = 0
    		kGUITrig = 0
-    	printk2 kY
     	while kY < 16 do
     		SWidgetChannel sprintfk "pwdataentry%d-0", kY
     		kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
@@ -423,16 +408,21 @@ instr 2048
     			kdebug4 cabbageGetValue SWidgetChannel
     			gkPWTable01[kY][0] cabbageGetValue SWidgetChannel
    				printk2 kdebug4
-   				;kGUITrig = 0
+   				kGUITrig = 0
    			endif
         	kY += 1
     	od
     
     	kY = 0
     	while kY < 16 do
+    		kGUITrig = 0
     		SWidgetChannel sprintfk "pwdataentry%d-0", kY
-			cabbageSetValue SWidgetChannel, gkPWTable01[kY][0]
+    		kGUITrig = changed(gkPWTable01[kY][0])
+    		if kGUITrig != 0 then    
+				cabbageSetValue SWidgetChannel, gkPWTable01[kY][0]
+			endif
 			SWidgetChannel sprintfk "pwdataentry%d-1", kY
+
 			cabbageSetValue SWidgetChannel, gkPWTable01[kY][1]
 			SWidgetChannel sprintfk "pwdataentry%d-2", kY
 			cabbageSetValue SWidgetChannel, gkPWTable01[kY][2]
