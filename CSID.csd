@@ -176,15 +176,15 @@ instr 1024
   
 	;iNoteFrequency = p4
 	;iMidiVelocity = p5
-	iMidiNote notnum
-	iNoteFRQ mtof iMidiNote
-	iRawMidiVelocity veloc 0, 127
-	kNoteRelease release  
+	iMidiNote = notnum()
+	iNoteFRQ = mtof:i(iMidiNote)
+	iRawMidiVelocity = veloc:i(0, 127)
+	kNoteRelease = release()  
     
-	iADSRAttack cabbageGetValue "V1EnvAttack"
-	iADSRDecay cabbageGetValue "V1EnvDecay"
-	iADSRSustain cabbageGetValue "V1EnvSustain"
-	iADSRRelease cabbageGetValue "V1EnvRelease"
+	iADSRAttack = cabbageGetValue:i("V1EnvAttack")
+	iADSRDecay = cabbageGetValue:i("V1EnvDecay")
+	iADSRSustain = cabbageGetValue:i("V1EnvSustain")
+	iADSRRelease = cabbageGetValue:i("V1EnvRelease")
     
 	;Debug Stuffs
 	;kWaveform cabbageGetValue "V1Waveform"
@@ -209,13 +209,12 @@ instr 1024
 		else
 			kPulseWidth += gkPWTable01[kPWTableIndex][1]
 		endif
-		;kPWIndexTrig changed kPWTableIndex
 		if kPWIndexOld != kPWTableIndex then
-			SWidgetChannel sprintfk "pwdatarow%d", kPWIndexOld
-    		cabbageSet 1, SWidgetChannel, "colour", 64, 64, 46, 128
+			SWidgetChannel = sprintfk("pwdatarow%d", kPWIndexOld)
+    		cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
     	endif
-		SWidgetChannel sprintfk "pwdatarow%d", kPWTableIndex
-    	cabbageSet 1, SWidgetChannel, "colour", 255, 255, 255, 64
+		SWidgetChannel = sprintfk("pwdatarow%d", kPWTableIndex)
+    	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 	endif
 	
 	; Note & Frequency Modulator
@@ -229,15 +228,15 @@ instr 1024
 			endif
 			kFREQDelayCounter = gkFREQTable01[kFREQTableIndex][2]
 			kNote = iMidiNote + gkFREQTable01[kFREQTableIndex][0]
-			kFREQ mtof kNote
+			kFREQ = mtof(kNote)
 		endif
 		kFREQ += gkFREQTable01[kFREQTableIndex][1]
 		if kFREQIndexOld != kFREQTableIndex then
-			SWidgetChannel sprintfk "freqdatarow%d", kFREQIndexOld
-    		cabbageSet 1, SWidgetChannel, "colour", 64, 64, 46, 128
+			SWidgetChannel = sprintfk("freqdatarow%d", kFREQIndexOld)
+    		cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
     	endif
-		SWidgetChannel sprintfk "freqdatarow%d", kFREQTableIndex
-    	cabbageSet 1, SWidgetChannel, "colour", 255, 255, 255, 64
+		SWidgetChannel = sprintfk("freqdatarow%d", kFREQTableIndex)
+    	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 	endif
 	
 	; Waveform Modulator
@@ -252,17 +251,17 @@ instr 1024
 			kWFDelayCounter = gkWFTable01[kWFTableIndex][2]
 			kWaveform = gkWFTable01[kWFTableIndex][0]
 			if kWFIndexOld != kWFTableIndex then
-				SWidgetChannel sprintfk "wfdatarow%d", kWFIndexOld
-    			cabbageSet 1, SWidgetChannel, "colour", 64, 64, 46, 128
+				SWidgetChannel = sprintfk("wfdatarow%d", kWFIndexOld)
+    			cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
     		endif
-			SWidgetChannel sprintfk "wfdatarow%d", kWFTableIndex
-    		cabbageSet 1, SWidgetChannel, "colour", 255, 255, 255, 64
+			SWidgetChannel = sprintfk("wfdatarow%d", kWFTableIndex)
+    		cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 		endif
 	endif
 
 	if (kWaveform & giTRI) != 0 then
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth - Should be Triangle but I'm working on it.
-		aTRI oscil iRawMidiVelocity/127, kFREQ, giTRI
+		aTRI = oscil(iRawMidiVelocity/127, kFREQ, giTRI)
 	else
 		aTRI = 0
 	endif
@@ -270,7 +269,7 @@ instr 1024
 	if (kWaveform & giSAW) != 0 then
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth
 		;aSAW oscil iRawMidiVelocity/127, iNoteFRQ, giSAW
-		aSAW vco2 iRawMidiVelocity/127, kFREQ, 0, kPulseWidth/4096
+		aSAW = vco2(iRawMidiVelocity/127, kFREQ, 0, kPulseWidth/4096)
 	else
     	aSAW = 0
 	endif
@@ -278,27 +277,27 @@ instr 1024
 	if (kWaveform & giPUL) != 0 then
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth
 		;aPUL oscil iRawMidiVelocity/127, iNoteFRQ, giPUL
-		aPUL vco2 iRawMidiVelocity/127, kFREQ, 2, kPulseWidth/4096
+		aPUL = vco2(iRawMidiVelocity/127, kFREQ, 2, kPulseWidth/4096)
     else
     	aPUL = 0
 	endif
     
 	if (kWaveform & giNOI) != 0 then
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth
-	aNOI randh iRawMidiVelocity/127, kFREQ
+	aNOI = randh(iRawMidiVelocity/127, kFREQ)
     else
     	aNOI = 0
 	endif
     
-	aOut sum aTRI, aSAW, aPUL, aNOI 
-	kEnv madsr giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease]
+	aOut = sum(aTRI, aSAW, aPUL, aNOI )
+	kEnv = madsr(giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease])
 
-	kmasterVolume cabbageGetValue "mastervolume"
+	kmasterVolume = cabbageGetValue("mastervolume")
 	kmasterVolume = kmasterVolume / 15
 	aMix = aOut*kEnv*kmasterVolume
-	outs aMix, aMix
+	outs(aMix, aMix)
     
-	display	aMix, .01, 2
+	display(aMix, .01, 2)
 	
 ;---GUI Section    
 	/*
@@ -307,16 +306,16 @@ instr 1024
 		printk2 kWaveform
 	endif
 	*/
-	cabbageSetValue "V1Frequency", kFREQ
+	cabbageSetValue("V1Frequency", kFREQ)
 
-	kPulseWidthchanged changed kPulseWidth
+	kPulseWidthchanged = changed(kPulseWidth)
 	if kPulseWidthchanged == 1 then
-		cabbageSetValue "V1PulseWidth", kPulseWidth
+		cabbageSetValue("V1PulseWidth", kPulseWidth)
 	endif
 
-	kEnvChanged changed kEnv
+	kEnvChanged = changed(kEnv)
 	if kEnvChanged == 1 then
-		cabbageSetValue "vMeter1", kEnv
+		cabbageSetValue("vMeter1", kEnv)
 	endif
 
     /*
@@ -331,115 +330,121 @@ endin
 
 instr 2048
 	; Set-up Pulse Width Modulation GUI Elements
+	; Three separate bold with each colum separate as colums may have a range of limits and increments specific to it.
 	
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY
-    	cabbageCreate "label", SWidget	
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+1*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+2*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+3*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	cabbageCreate("label", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+1*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+2*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+3*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
 	
 	; Set-up Frequency Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 16, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY
-    	cabbageCreate "label", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+1*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+2*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+3*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	cabbageCreate("label", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+1*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+2*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+3*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
 	
 	; Set-up Waveform Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget sprintf "bounds(%d, %d, 16, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY
-    	cabbageCreate "label", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+1*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+2*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
-		SWidget sprintf "bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+3*50, 42+iY*22, iY
-		cabbageCreate "nslider", SWidget
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	cabbageCreate("label", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+1*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+2*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+3*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
 /*	
 	iY init 0
 	while iY < 16 do
-    	SWidgetChannel sprintfk "pwdataentry%d-0", iY
-		cabbageSetValue SWidgetChannel, gkPWTable01[iY][0]
-		SWidgetChannel sprintfk "pwdataentry%d-1", iY
-		cabbageSetValue SWidgetChannel, gkPWTable01[iY][1]
-		SWidgetChannel sprintfk "pwdataentry%d-2", iY
-		cabbageSetValue SWidgetChannel, gkPWTable01[iY][2]
+    	SWidgetChannel = sprintfk("pwdataentry%d-0", iY)
+		cabbageSetValue(SWidgetChannel, gkPWTable01[iY][0])
+		SWidgetChannel = sprintfk("pwdataentry%d-1", iY)
+		cabbageSetValue(SWidgetChannel, gkPWTable01[iY][1])
+		SWidgetChannel = sprintfk("pwdataentry%d-2", iY)
+		cabbageSetValue(SWidgetChannel, gkPWTable01[iY][2])
 			
-		SWidgetChannel sprintfk "freqdataentry%d-0", iY
-		cabbageSetValue SWidgetChannel, gkFREQTable01[iY][0]
-		SWidgetChannel sprintfk "freqdataentry%d-1", iY
-		cabbageSetValue SWidgetChannel, gkFREQTable01[iY][1]
-		SWidgetChannel sprintfk "freqdataentry%d-2", iY
-		cabbageSetValue SWidgetChannel, gkFREQTable01[iY][2]
+		SWidgetChannel = sprintfk("freqdataentry%d-0", iY)
+		cabbageSetValue(SWidgetChannel, gkFREQTable01[iY][0])
+		SWidgetChannel = sprintfk("freqdataentry%d-1", iY)
+		cabbageSetValue(SWidgetChannel, gkFREQTable01[iY][1])
+		SWidgetChannel = sprintfk("freqdataentry%d-2", iY)
+		cabbageSetValue(SWidgetChannel, gkFREQTable01[iY][2])
 			
-		SWidgetChannel sprintfk "wfdataentry%d-0", iY
-		cabbageSetValue SWidgetChannel, gkWFTable01[iY][0]
-		SWidgetChannel sprintfk "wfdataentry%d-1", iY
-		cabbageSetValue SWidgetChannel, gkWFTable01[iY][1]
-		SWidgetChannel sprintfk "wfdataentry%d-2", iY
-		cabbageSetValue SWidgetChannel, gkWFTable01[iY][2]
+		SWidgetChannel = sprintfk("wfdataentry%d-0", iY)
+		cabbageSetValue(SWidgetChannel, gkWFTable01[iY][0])
+		SWidgetChannel = sprintfk("wfdataentry%d-1", iY)
+		cabbageSetValue(SWidgetChannel, gkWFTable01[iY][1])
+		SWidgetChannel = sprintfk("wfdataentry%d-2", iY)
+		cabbageSetValue(SWidgetChannel, gkWFTable01[iY][2])
        	iY += 1
 	od
 */
-    if metro(3) == 1 then
+    if metro(2) == 1 then
 		kY = 0
-   		kGUITrig = 0
+   		;kGUITrig = 0
     	while kY < 16 do
-    		SWidgetChannel sprintfk "pwdataentry%d-0", kY
-    		kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
-				if kGUITrig != 0 then
-    			kdebug4 cabbageGetValue SWidgetChannel
-    			gkPWTable01[kY][0] cabbageGetValue SWidgetChannel
-   				printk2 kdebug4
-   				kGUITrig = 0
-   			endif
+    		SWidgetChannel = sprintfk("pwdataentry%d-0", kY)
+    		;kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
+			;if kGUITrig != 0 then
+			if changed:k(cabbageGetValue:k(SWidgetChannel)) != 0 then
+    			kdebug4 = cabbageGetValue(SWidgetChannel)
+    			gkPWTable01[kY][0] = cabbageGetValue(SWidgetChannel)
+   				printk2(kdebug4)
+   				;printk2(kY)
+   				;kGUITrig = 0
+   			elseif changed:k(gkPWTable01[kY][0]) != 0 then
+   				cabbageSetValue(SWidgetChannel, gkPWTable01[kY][0])
+   				kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
+			endif
         	kY += 1
     	od
     
     	kY = 0
     	while kY < 16 do
     		kGUITrig = 0
-    		SWidgetChannel sprintfk "pwdataentry%d-0", kY
+    		SWidgetChannel = sprintfk("pwdataentry%d-0", kY)
     		kGUITrig = changed(gkPWTable01[kY][0])
     		if kGUITrig != 0 then    
-				cabbageSetValue SWidgetChannel, gkPWTable01[kY][0]
+				cabbageSetValue(SWidgetChannel, gkPWTable01[kY][0])
 			endif
-			SWidgetChannel sprintfk "pwdataentry%d-1", kY
-
-			cabbageSetValue SWidgetChannel, gkPWTable01[kY][1]
-			SWidgetChannel sprintfk "pwdataentry%d-2", kY
-			cabbageSetValue SWidgetChannel, gkPWTable01[kY][2]
 			
-			SWidgetChannel sprintfk "freqdataentry%d-0", kY
-			cabbageSetValue SWidgetChannel, gkFREQTable01[kY][0]
-			SWidgetChannel sprintfk "freqdataentry%d-1", kY
-			cabbageSetValue SWidgetChannel, gkFREQTable01[kY][1]
-			SWidgetChannel sprintfk "freqdataentry%d-2", kY
-			cabbageSetValue SWidgetChannel, gkFREQTable01[kY][2]
+			SWidgetChannel = sprintfk("pwdataentry%d-1", kY)
+			cabbageSetValue(SWidgetChannel, gkPWTable01[kY][1])
+			SWidgetChannel = sprintfk("pwdataentry%d-2", kY)
+			cabbageSetValue(SWidgetChannel, gkPWTable01[kY][2])
 			
-			SWidgetChannel sprintfk "wfdataentry%d-0", kY
-			cabbageSetValue SWidgetChannel, gkWFTable01[kY][0]
-			SWidgetChannel sprintfk "wfdataentry%d-1", kY
-			cabbageSetValue SWidgetChannel, gkWFTable01[kY][1]
-			SWidgetChannel sprintfk "wfdataentry%d-2", kY
-			cabbageSetValue SWidgetChannel, gkWFTable01[kY][2]
+			SWidgetChannel = sprintfk("freqdataentry%d-0", kY)
+			cabbageSetValue(SWidgetChannel, gkFREQTable01[kY][0])
+			SWidgetChannel = sprintfk("freqdataentry%d-1", kY)
+			cabbageSetValue(SWidgetChannel, gkFREQTable01[kY][1])
+			SWidgetChannel = sprintfk("freqdataentry%d-2", kY)
+			cabbageSetValue(SWidgetChannel, gkFREQTable01[kY][2])
+			
+			SWidgetChannel = sprintfk("wfdataentry%d-0", kY)
+			cabbageSetValue(SWidgetChannel, gkWFTable01[kY][0])
+			SWidgetChannel = sprintfk("wfdataentry%d-1", kY)
+			cabbageSetValue(SWidgetChannel, gkWFTable01[kY][1])
+			SWidgetChannel = sprintfk("wfdataentry%d-2", kY)
+			cabbageSetValue(SWidgetChannel, gkWFTable01[kY][2])
         	kY += 1
         od
     endif
