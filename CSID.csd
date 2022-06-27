@@ -24,7 +24,7 @@ form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colou
 keyboard bounds(1, 702, 999, 95) channel("keyboard")
 
 ;Volume Related
-vmeter bounds(18, 8, 35, 224) channel("vMeter1")  overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(16, 128, 16) outlineThickness(3)
+vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(16, 128, 16) outlineThickness(3)
 rslider bounds(4, 238, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255)
 
 ;Manual adjusters
@@ -143,7 +143,7 @@ giPUL = 64
 giNOI = 128
 
 ;instrument will be triggered by keyboard widget or MIDI event
-instr DRIVER
+instr 1024
 	aOut init 0
 	aMix init 0
 	aTRI init 0
@@ -299,12 +299,14 @@ instr DRIVER
 	outs aMix, aMix
     
 	display	aMix, .01, 2
-    
-	;if kWaveformchanged == 1 then
-		;cabbageSet  "gentable1", "tableNumber", kWaveform
-		;printk2 kWaveform
-	;endif
 	
+;---GUI Section    
+	/*
+	if kWaveformchanged == 1 then
+		cabbageSet  "gentable1", "tableNumber", kWaveform
+		printk2 kWaveform
+	endif
+	*/
 	cabbageSetValue "V1Frequency", kFREQ
 
 	kPulseWidthchanged changed kPulseWidth
@@ -315,7 +317,22 @@ instr DRIVER
 	kEnvChanged changed kEnv
 	if kEnvChanged == 1 then
 		cabbageSetValue "vMeter1", kEnv
-	endif 
+	endif
+	/*
+	;Update tables from GUI number boxes
+	kY init 0
+   	kGUITrig init 0
+    printk2 kY
+    while kY < 16 do
+    	SWidgetChannel sprintfk "pwdataentry%d-0", kY
+    	kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
+		if kGUITrig != 0 then
+    		kdebug4 cabbageGetValue SWidgetChannel
+   			printk2 kdebug4
+   		endif
+        kY += 1
+    od
+    */
     /*
 	kstatus, kchan, kdata1, kdata2  midiin              ;read in midi
 	ktrigger changed kstatus, kchan, kdata1, kdata2     ;trigger if midi data change
@@ -326,12 +343,9 @@ instr DRIVER
 	*/
 endin
 
-instr GUI
+instr 2048
 	; Set-up Pulse Width Modulation GUI Elements
 	
-	;Y position is consistent across all data entry fields.
-
-	;iXPos = 60
     iY init 0
     while iY < 16 do
     	SWidget sprintf "bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY
@@ -372,10 +386,49 @@ instr GUI
 		cabbageCreate "nslider", SWidget
 		iY += 1
 	od
-
+/*	
+	iY init 0
+	while iY < 16 do
+    	SWidgetChannel sprintfk "pwdataentry%d-0", iY
+		cabbageSetValue SWidgetChannel, gkPWTable01[iY][0]
+		SWidgetChannel sprintfk "pwdataentry%d-1", iY
+		cabbageSetValue SWidgetChannel, gkPWTable01[iY][1]
+		SWidgetChannel sprintfk "pwdataentry%d-2", iY
+		cabbageSetValue SWidgetChannel, gkPWTable01[iY][2]
+			
+		SWidgetChannel sprintfk "freqdataentry%d-0", iY
+		cabbageSetValue SWidgetChannel, gkFREQTable01[iY][0]
+		SWidgetChannel sprintfk "freqdataentry%d-1", iY
+		cabbageSetValue SWidgetChannel, gkFREQTable01[iY][1]
+		SWidgetChannel sprintfk "freqdataentry%d-2", iY
+		cabbageSetValue SWidgetChannel, gkFREQTable01[iY][2]
+			
+		SWidgetChannel sprintfk "wfdataentry%d-0", iY
+		cabbageSetValue SWidgetChannel, gkWFTable01[iY][0]
+		SWidgetChannel sprintfk "wfdataentry%d-1", iY
+		cabbageSetValue SWidgetChannel, gkWFTable01[iY][1]
+		SWidgetChannel sprintfk "wfdataentry%d-2", iY
+		cabbageSetValue SWidgetChannel, gkWFTable01[iY][2]
+       	iY += 1
+	od
+*/
     if metro(3) == 1 then
-    	kY init 0
+		kY = 0
+   		kGUITrig = 0
     	printk2 kY
+    	while kY < 16 do
+    		SWidgetChannel sprintfk "pwdataentry%d-0", kY
+    		kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
+				if kGUITrig != 0 then
+    			kdebug4 cabbageGetValue SWidgetChannel
+    			gkPWTable01[kY][0] cabbageGetValue SWidgetChannel
+   				printk2 kdebug4
+   				;kGUITrig = 0
+   			endif
+        	kY += 1
+    	od
+    
+    	kY = 0
     	while kY < 16 do
     		SWidgetChannel sprintfk "pwdataentry%d-0", kY
 			cabbageSetValue SWidgetChannel, gkPWTable01[kY][0]
@@ -400,6 +453,7 @@ instr GUI
         	kY += 1
         od
     endif
+   	;Update tables from GUI number boxes
 endin
 
 </CsInstruments>
@@ -412,7 +466,7 @@ f 32 	0 	512 	7 	-1 512 1 ;Sawtooth (0x20)
 f 64 	0 	1024 	7 	1 512 1 0 -1 512 -1 ;Square (0x40)
 
 ;causes Csound to run for about 7000 years...
-i "GUI" 0 z
+i2048 0 z
 ;f0 z
 </CsScore>
 
