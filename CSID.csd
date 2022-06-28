@@ -80,7 +80,7 @@ label bounds(846, 682, 152, 13) channel("vanity01") text("Gavin Graham (c) 2020"
 ; Initialize the global variables. 
 ;sr=48000
 ;sr is set by the host
-kr=30
+kr=60
 ksmps = 32
 nchnls = 2
 0dbfs = 0.75
@@ -108,7 +108,6 @@ DEC	HEX	(Time/Cycle)	(Time/Cycle)
 */
 giEnvAttack[] fillarray 0.002, 0.008, 0.016, 0.024, 0.038, 0.056, 0.068, 0.080, 0.1, 0.25, 0.5, 0.8, 1, 3, 5, 8
 giEnvDecayRelease[] fillarray 0.006, 0.024, 0.048, 0.072, 0.114, 0.168, 0.204, 0.24, 0.3, 0.75, 1.5, 2.4, 3, 9, 15, 24
-
 						
 gkPWTable01[][] init 16,3
 						;Absolute Val or -1 to loop|Phase/Index|Count/Delay
@@ -119,11 +118,11 @@ gkPWTable01 fillarray	1, 40, 20,
 
 gkFREQTable01[][] init 16,3
 gkFREQTable02[][] init 16,3
-gkFREQTable01 fillarray	0, 0, 17,
+gkFREQTable01 = fillarray(0, 0, 17,
 						0, 0.6, 2,
 						0, -0.6, 2,
 						-1, 1, 0,
-						0, 0, -1
+						0, 0, -1)
 gkFREQTable02 fillarray	0, 0, 0,
 						4, 0, 0,
 						7, 0, 0,
@@ -372,83 +371,50 @@ instr 2048
 		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
-/*	
+	
+	; Populate the widggets from the table arrays.
 	iY init 0
 	while iY < 16 do
-    	SWidgetChannel = sprintfk("pwdataentry%d-0", iY)
-		cabbageSetValue(SWidgetChannel, gkPWTable01[iY][0])
-		SWidgetChannel = sprintfk("pwdataentry%d-1", iY)
-		cabbageSetValue(SWidgetChannel, gkPWTable01[iY][1])
-		SWidgetChannel = sprintfk("pwdataentry%d-2", iY)
-		cabbageSetValue(SWidgetChannel, gkPWTable01[iY][2])
+		iX init 0
+		while iX < 3 do
+			SWidgetChannel = sprintf("pwdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkPWTable01,iY,iX))
 			
-		SWidgetChannel = sprintfk("freqdataentry%d-0", iY)
-		cabbageSetValue(SWidgetChannel, gkFREQTable01[iY][0])
-		SWidgetChannel = sprintfk("freqdataentry%d-1", iY)
-		cabbageSetValue(SWidgetChannel, gkFREQTable01[iY][1])
-		SWidgetChannel = sprintfk("freqdataentry%d-2", iY)
-		cabbageSetValue(SWidgetChannel, gkFREQTable01[iY][2])
+			SWidgetChannel = sprintf("freqdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkFREQTable01,iY,iX))
 			
-		SWidgetChannel = sprintfk("wfdataentry%d-0", iY)
-		cabbageSetValue(SWidgetChannel, gkWFTable01[iY][0])
-		SWidgetChannel = sprintfk("wfdataentry%d-1", iY)
-		cabbageSetValue(SWidgetChannel, gkWFTable01[iY][1])
-		SWidgetChannel = sprintfk("wfdataentry%d-2", iY)
-		cabbageSetValue(SWidgetChannel, gkWFTable01[iY][2])
+			SWidgetChannel = sprintf("wfdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkWFTable01,iY,iX))
+			
+			iX += 1
+		od
        	iY += 1
 	od
-*/
+	
+	; Runtime updating of the tables from the widgets.
     if metro(2) == 1 then
 		kY = 0
-   		;kGUITrig = 0
     	while kY < 16 do
-    		SWidgetChannel = sprintfk("pwdataentry%d-0", kY)
-    		;kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
-			;if kGUITrig != 0 then
-			if changed:k(cabbageGetValue:k(SWidgetChannel)) != 0 then
-    			kdebug4 = cabbageGetValue(SWidgetChannel)
-    			gkPWTable01[kY][0] = cabbageGetValue(SWidgetChannel)
-   				printk2(kdebug4)
-   				;printk2(kY)
-   				;kGUITrig = 0
-   			elseif changed:k(gkPWTable01[kY][0]) != 0 then
-   				cabbageSetValue(SWidgetChannel, gkPWTable01[kY][0])
-   				kGUITrig = changed:k(cabbageGetValue:k(SWidgetChannel))
-			endif
+    		kX = 0
+    		while iX < 3 do
+    			SWidgetChannel = sprintfk("pwdataentry%d-%d", kY, kX)
+				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
+    				gkPWTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+				endif
+				SWidgetChannel = sprintfk("freqdataentry%d-%d", kY, kX)
+				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
+    				gkFREQTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+				endif
+				SWidgetChannel = sprintfk("wfdataentry%d-%d", kY, kX)
+				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
+    				gkWFTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+				endif
+				kX += 1
+			od
         	kY += 1
-    	od
-    
+    	od   
     	kY = 0
-    	while kY < 16 do
-    		kGUITrig = 0
-    		SWidgetChannel = sprintfk("pwdataentry%d-0", kY)
-    		kGUITrig = changed(gkPWTable01[kY][0])
-    		if kGUITrig != 0 then    
-				cabbageSetValue(SWidgetChannel, gkPWTable01[kY][0])
-			endif
-			
-			SWidgetChannel = sprintfk("pwdataentry%d-1", kY)
-			cabbageSetValue(SWidgetChannel, gkPWTable01[kY][1])
-			SWidgetChannel = sprintfk("pwdataentry%d-2", kY)
-			cabbageSetValue(SWidgetChannel, gkPWTable01[kY][2])
-			
-			SWidgetChannel = sprintfk("freqdataentry%d-0", kY)
-			cabbageSetValue(SWidgetChannel, gkFREQTable01[kY][0])
-			SWidgetChannel = sprintfk("freqdataentry%d-1", kY)
-			cabbageSetValue(SWidgetChannel, gkFREQTable01[kY][1])
-			SWidgetChannel = sprintfk("freqdataentry%d-2", kY)
-			cabbageSetValue(SWidgetChannel, gkFREQTable01[kY][2])
-			
-			SWidgetChannel = sprintfk("wfdataentry%d-0", kY)
-			cabbageSetValue(SWidgetChannel, gkWFTable01[kY][0])
-			SWidgetChannel = sprintfk("wfdataentry%d-1", kY)
-			cabbageSetValue(SWidgetChannel, gkWFTable01[kY][1])
-			SWidgetChannel = sprintfk("wfdataentry%d-2", kY)
-			cabbageSetValue(SWidgetChannel, gkWFTable01[kY][2])
-        	kY += 1
-        od
     endif
-   	;Update tables from GUI number boxes
 endin
 
 </CsInstruments>
