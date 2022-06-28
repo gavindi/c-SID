@@ -262,7 +262,7 @@ instr 1024
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth - Should be Triangle but I'm working on it.
 		aTRI = oscil(iRawMidiVelocity/127, kFREQ, giTRI)
 	else
-		aTRI = 0
+		aTRI = 1
 	endif
     
 	if (kWaveform & giSAW) != 0 then
@@ -270,7 +270,7 @@ instr 1024
 		;aSAW oscil iRawMidiVelocity/127, iNoteFRQ, giSAW
 		aSAW = vco2(iRawMidiVelocity/127, kFREQ, 0, kPulseWidth/4096)
 	else
-    	aSAW = 0
+    	aSAW = 1
 	endif
     
 	if (kWaveform & giPUL) != 0 then
@@ -278,22 +278,22 @@ instr 1024
 		;aPUL oscil iRawMidiVelocity/127, iNoteFRQ, giPUL
 		aPUL = vco2(iRawMidiVelocity/127, kFREQ, 2, kPulseWidth/4096)
     else
-    	aPUL = 0
+    	aPUL = 1
 	endif
     
 	if (kWaveform & giNOI) != 0 then
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth
-	aNOI = randh(iRawMidiVelocity/127, kFREQ)
+		aNOI = randh(iRawMidiVelocity/127, kFREQ)
     else
-    	aNOI = 0
+    	aNOI = 1
 	endif
     
-	aOut = sum(aTRI, aSAW, aPUL, aNOI )
+	aOut = 1 - sum(aTRI, aSAW, aPUL, aNOI) / 4
 	kEnv = madsr(giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease])
 
 	kmasterVolume = cabbageGetValue("mastervolume")
 	kmasterVolume = kmasterVolume / 15
-	aMix = aOut*kEnv*kmasterVolume
+	aMix = aOut * kEnv * kmasterVolume
 	outs(aMix, aMix)
     
 	display(aMix, .01, 2)
@@ -396,7 +396,7 @@ instr 2048
 		kY = 0
     	while kY < 16 do
     		kX = 0
-    		while iX < 3 do
+    		while kX < 3 do
     			SWidgetChannel = sprintfk("pwdataentry%d-%d", kY, kX)
 				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
     				gkPWTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
