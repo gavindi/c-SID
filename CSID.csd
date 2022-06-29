@@ -45,10 +45,10 @@ vslider bounds(165, 30, 50, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) t
 
 ;Display
 groupbox bounds(634, 41, 134, 115) channel("waveformdisp01") text("Oscilloscope")  outlineColour(16, 128, 16, 255) outlineThickness(3) colour(0, 8, 0, 255)
-signaldisplay bounds(636, 60, 131, 95), , channel("signaldisplay14"), displayType("waveform"), signalVariable ("aMix"), colour:0(0, 255, 0, 255), , zoom(3), , colour(0, 255, 0, 255)
+signaldisplay bounds(636, 60, 131, 95), , channel("signaldisplay14"), displayType("waveform"), signalVariable ("aMix"), colour:0(0, 255, 0, 255), , zoom(0), , colour(0, 255, 0, 255)
 ;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
-;Waveform Modulator GUI elements
+;Waveform Modulator GUI elements - 210 pixels apart
 groupbox bounds(70, 238, 195, 430) channel("wftablegroup") text("Waveform Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
 label bounds(32, 30, 50, 10) channel("wfwavelabel") text("Wave") fontStyle("plain") parent("wftablegroup")
 label bounds(80, 30, 50, 10) channel("wfamplabel") text("Amp") fontStyle("plain") parent("wftablegroup")
@@ -68,6 +68,16 @@ label bounds(32, 30, 50, 10) channel("freqfreqlabel") text("Freq") fontStyle("pl
 label bounds(80, 30, 50, 10) channel("freqamplabel") text("Amp") fontStyle("plain") parent("freqtablegroup")
 label bounds(130, 30, 50, 10) channel("freqwaitlabel") text("Wait") fontStyle("plain") parent("freqtablegroup")
 hslider bounds(16, 400, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("freqtablegroup")
+
+;Filter Table Modulator GUI elements
+groupbox bounds(700, 238, 195, 430) channel("filttablegroup") text("Filter Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
+hslider bounds(16, 400, 186, 25) channel("filttableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("filttablegroup")
+
+;Resonance Table Modulator GUI elements
+// Placeholder
+
+;Control Table Modulator GUI elements
+// Placeholder
 
 label bounds(794, 670, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
 
@@ -139,6 +149,13 @@ gkWFTable01 fillarray	16, 0, 2,
 						-1, 1, 0,
 						0, 0, -1
 
+gkFILTTable01[][] init 16,3
+gkFILTTable01 = fillarray(0, 0, 17,
+						0, 0.6, 5,
+						0, -0.6, 5,
+						-1, 1, 0,
+						0, 0, -1)
+
 ; - SID Control Register Waveforms
 giTRI = 16
 giSAW = 32
@@ -179,7 +196,15 @@ instr 1024
 	kWFDelayCounter init 0
 	kWFRepeatCounter init 0
 	kWF init 0
- 
+	
+	; Frequency Modulator
+	kFILTTableIndex init -1
+	kFILTIndexOld init 0
+	kFILTDelayCounter init 0
+	kFILTPhaseIndex init 0
+	kFilterWidth init 0
+	kFILTRepeatCounter init 0
+
 	kWaveformchanged init 0   
   
 	;iNoteFrequency = p4
@@ -265,6 +290,31 @@ instr 1024
 			SWidgetChannel = sprintfk("wfdatarow%d", kWFTableIndex)
     		cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 		endif
+	endif
+	
+	; Filter Modulator
+	if kFILTDelayCounter != -1 then
+		kFILTIndexOld = kFILTTableIndex
+		kFILTDelayCounter -= 1
+		if kFILTDelayCounter < 0 then
+			kFILTTableIndex += 1
+			if gkFILTTable01[kFILTTableIndex][0] = -1 then
+				kFILTTableIndex = gkFILTTable01[kFILTTableIndex][1]
+			endif
+			kFILTDelayCounter = gkFILTTable01[kPWTableIndex][2]
+			kFILTPhaseIndex = gkFILTTable01[kPWTableIndex][1]
+			if gkFILTTable01[kFILTTableIndex][0] > 0 then
+				kFilterWidth = gkFILTTable01[kFILTTableIndex][0]
+			endif
+		else
+			kFilterWidth += gkFILTTable01[kPWTableIndex][1]
+		endif
+		if kFILTIndexOld != kFILTTableIndex then
+			SWidgetChannel = sprintfk("filtdatarow%d", kFILTIndexOld)
+    		cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    	endif
+		SWidgetChannel = sprintfk("filtdatarow%d", kPWTableIndex)
+    	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 	endif
 
 	if (kWaveform & giTRI) != 0 then
@@ -380,6 +430,20 @@ instr 2048
 		iY += 1
 	od
 	
+	; Set-up Filter Modulation GUI elements
+    iY init 0
+    while iY < 16 do
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"filtdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"filttablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	cabbageCreate("label", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"filttablegroup\")", -18+1*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"filttablegroup\")", -18+2*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"filttablegroup\")", -18+3*50, 42+iY*22, iY)
+		cabbageCreate("nslider", SWidget)
+		iY += 1
+	od
+	
 	; Populate the widggets from the table arrays.
 	iY init 0
 	while iY < 16 do
@@ -393,6 +457,9 @@ instr 2048
 			
 			SWidgetChannel = sprintf("wfdataentry%d-%d", iY, iX)
 			cabbageSetValue(SWidgetChannel, i(gkWFTable01,iY,iX))
+			
+			SWidgetChannel = sprintf("filtdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkFILTTable01,iY,iX))
 			
 			iX += 1
 		od
@@ -416,6 +483,10 @@ instr 2048
 				SWidgetChannel = sprintfk("wfdataentry%d-%d", kY, kX)
 				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
     				gkWFTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+				endif
+				SWidgetChannel = sprintfk("filtdataentry%d-%d", kY, kX)
+				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
+    				gkFILTTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
 				endif
 				kX += 1
 			od
