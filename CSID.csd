@@ -71,6 +71,9 @@ hslider bounds(16, 400, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1
 
 ;Filter Table Modulator GUI elements
 groupbox bounds(700, 238, 195, 430) channel("filttablegroup") text("Filter Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
+label bounds(32, 30, 50, 10) channel("filtdutylabel") text("Freq") fontStyle("plain") parent("filttablegroup")
+label bounds(80, 30, 50, 10) channel("filtamplabel") text("Amp") fontStyle("plain") parent("filttablegroup")
+label bounds(130, 30, 50, 10) channel("filtwaitlabel") text("Wait") fontStyle("plain") parent("filttablegroup")
 hslider bounds(16, 400, 186, 25) channel("filttableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("filttablegroup")
 
 ;Resonance Table Modulator GUI elements
@@ -201,8 +204,8 @@ instr 1024
 	kFILTTableIndex init -1
 	kFILTIndexOld init 0
 	kFILTDelayCounter init 0
-	kFILTPhaseIndex init 0
-	kFilterWidth init 0
+	kFILTAmpIndex init 0
+	kFilterFreq init 0
 	kFILTRepeatCounter init 0
 
 	kWaveformchanged init 0   
@@ -301,13 +304,13 @@ instr 1024
 			if gkFILTTable01[kFILTTableIndex][0] = -1 then
 				kFILTTableIndex = gkFILTTable01[kFILTTableIndex][1]
 			endif
-			kFILTDelayCounter = gkFILTTable01[kPWTableIndex][2]
-			kFILTPhaseIndex = gkFILTTable01[kPWTableIndex][1]
+			kFILTDelayCounter = gkFILTTable01[kFILTTableIndex][2]
+			kFILTAmpIndex = gkFILTTable01[kFILTTableIndex][1]
 			if gkFILTTable01[kFILTTableIndex][0] > 0 then
-				kFilterWidth = gkFILTTable01[kFILTTableIndex][0]
+				kFilterFreq = gkFILTTable01[kFILTTableIndex][0]
 			endif
 		else
-			kFilterWidth += gkFILTTable01[kPWTableIndex][1]
+			kFilterFreq += gkFILTTable01[kFILTTableIndex][1]
 		endif
 		if kFILTIndexOld != kFILTTableIndex then
 			SWidgetChannel = sprintfk("filtdatarow%d", kFILTIndexOld)
@@ -316,7 +319,8 @@ instr 1024
 		SWidgetChannel = sprintfk("filtdatarow%d", kPWTableIndex)
     	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 	endif
-
+	
+;---Oscillator Section
 	if (kWaveform & giTRI) != 0 then
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth - Should be Triangle but I'm working on it.
 		aTRI = oscil(iRawMidiVelocity/127, kFREQ, giTRI)
