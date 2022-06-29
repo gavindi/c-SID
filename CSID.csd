@@ -353,7 +353,7 @@ instr 1024
     ;Combine all possible waveforms
 	aOut = 1 - sum(aTRI, aSAW, aPUL, aNOI) / 4
 	;Apply Filter
-	aOut = moogladder(aOut, kFilterFreq, 0.9)
+	;aOut = moogladder(aOut, kFilterFreq, 0.9)
 	;Apply ADSR
 	kEnv = madsr(giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease])
 
