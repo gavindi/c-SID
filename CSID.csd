@@ -316,7 +316,7 @@ instr 1024
 			SWidgetChannel = sprintfk("filtdatarow%d", kFILTIndexOld)
     		cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
     	endif
-		SWidgetChannel = sprintfk("filtdatarow%d", kPWTableIndex)
+		SWidgetChannel = sprintfk("filtdatarow%d", kFILTTableIndex)
     	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 	endif
 	
@@ -350,15 +350,21 @@ instr 1024
     else
     	aNOI = 1
 	endif
-    
+    ;Combine all possible waveforms
 	aOut = 1 - sum(aTRI, aSAW, aPUL, aNOI) / 4
+	;Apply Filter
+	aOut = moogladder(aOut, kFilterFreq, 0.9)
+	;Apply ADSR
 	kEnv = madsr(giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease])
 
+	;Mix the master volume
 	kmasterVolume = cabbageGetValue("mastervolume")
 	kmasterVolume = kmasterVolume / 15
+	;Final master volume mix
 	aMix = aOut * kEnv * kmasterVolume
+	;Finaly output the damn thing!
 	outs(aMix, aMix)
-    
+    ;Oh, yeah some more display - maybe all the fast GUI updates should move here
 	display(aMix, .01, 2)
 	
 ;---GUI Section    
