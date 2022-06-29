@@ -15,13 +15,16 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
-
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <Cabbage>
 bounds(0, 0, 0, 0)
 
 ;form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
-form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,0,255)
+form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255)
 keyboard bounds(1, 702, 999, 95) channel("keyboard")
+image bounds(740, 2, 475, 68) channel("image10032") file("c-SIDLogo-01.png")
+image bounds(606, 2, 340, 232) channel("image10030") file("1576596860commodoor64andtv.svg")
+groupbox bounds(68, 235, 878, 435) channel("groupbox10031") colour(9, 106, 106, 255) lineThickness(0) outlineColour(16, 16, 16, 255)
 
 ;Volume Related
 vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(16, 128, 16) outlineThickness(3)
@@ -41,8 +44,8 @@ vslider bounds(114, 30, 50, 180) channel("V1EnvSustain") range(1, 15, 6, 1, 1) t
 vslider bounds(165, 30, 50, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
 
 ;Display
-groupbox bounds(740, 8, 252, 224) channel("waveformdisp01") text("Oscilloscope") colour:0(0, 8, 0, 255) outlineColour(16, 128, 16, 255) outlineThickness(3)
-signaldisplay bounds(5, 32, 229, 187), , channel("signaldisplay14"), displayType("waveform"), signalVariable("aMix"), colour:0(0, 255, 0, 255), , zoom(3), backgroundColour:0(0, 8, 0, 255), parent("waveformdisp01") 
+groupbox bounds(634, 41, 134, 115) channel("waveformdisp01") text("Oscilloscope")  outlineColour(16, 128, 16, 255) outlineThickness(3) colour(0, 8, 0, 255)
+signaldisplay bounds(636, 60, 131, 95), , channel("signaldisplay14"), displayType("waveform"), signalVariable ("aMix"), colour:0(0, 255, 0, 255), , zoom(3), , colour(0, 255, 0, 255)
 ;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
 ;Waveform Modulator GUI elements
@@ -66,9 +69,10 @@ label bounds(80, 30, 50, 10) channel("freqamplabel") text("Amp") fontStyle("plai
 label bounds(130, 30, 50, 10) channel("freqwaitlabel") text("Wait") fontStyle("plain") parent("freqtablegroup")
 hslider bounds(16, 400, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("freqtablegroup")
 
-label bounds(846, 682, 152, 13) channel("vanity01") text("Gavin Graham (c) 2020") align("right") fontColour(32, 32, 32)
+label bounds(794, 670, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
+
 </Cabbage>
-//  ---------------------------------------------------------------------------
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
     <CsOptions>
         ;-n --displays -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5
@@ -119,8 +123,8 @@ gkPWTable01 fillarray	1, 40, 20,
 gkFREQTable01[][] init 16,3
 gkFREQTable02[][] init 16,3
 gkFREQTable01 = fillarray(0, 0, 17,
-						0, 0.6, 2,
-						0, -0.6, 2,
+						0, 0.6, 5,
+						0, -0.6, 5,
 						-1, 1, 0,
 						0, 0, -1)
 gkFREQTable02 fillarray	0, 0, 0,
@@ -141,6 +145,8 @@ giSAW = 32
 giPUL = 64
 giNOI = 128
 
+gkPresetNumber = 0
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;instrument will be triggered by keyboard widget or MIDI event
 instr 1024
 	aOut init 0
@@ -157,11 +163,13 @@ instr 1024
 	kPWDelayCounter init 0
 	kPWPhaseIndex init 0
 	kPulseWidth init 0
+	kPWRepeatCounter init 0
 	
 	; Frequency Modulator
 	kFREQTableIndex init -1
 	kFREQIndexOld init 0
 	kFREQDelayCounter init 0
+	kFREWRepeatCounter init 0
 	kNote init 0
 	kFREQ init 0
 	
@@ -169,6 +177,7 @@ instr 1024
 	kWFTableIndex init -1
 	kWFIndexOld init 0
 	kWFDelayCounter init 0
+	kWFRepeatCounter init 0
 	kWF init 0
  
 	kWaveformchanged init 0   
@@ -326,11 +335,10 @@ instr 1024
 	endif
 	*/
 endin
-
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 instr 2048
 	; Set-up Pulse Width Modulation GUI Elements
-	; Three separate bold with each colum separate as colums may have a range of limits and increments specific to it.
-	
+	; Three separate bold with each colum separate as colums may have a range of limits and increments specific to it.	
     iY init 0
     while iY < 16 do
     	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
@@ -418,7 +426,7 @@ instr 2048
 endin
 
 </CsInstruments>
-//  ---------------------------------------------------------------------------
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsScore>
 
 ;Waveform function tables
