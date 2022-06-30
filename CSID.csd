@@ -21,7 +21,7 @@ bounds(0, 0, 0, 0)
 
 ;form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
 form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255)
-keyboard bounds(1, 702, 999, 95) channel("keyboard")
+keyboard bounds(1, 702, 999, 95) channel("keyboard") scrollbars(1) middleC(3)
 image bounds(740, 2, 475, 68) channel("image10032") file("c-SIDLogo-01.png")
 image bounds(606, 2, 340, 232) channel("image10030") file("1576596860commodoor64andtv.svg")
 groupbox bounds(68, 235, 878, 435) channel("groupbox10031") colour(9, 106, 106, 255) lineThickness(0) outlineColour(16, 16, 16, 255)
@@ -88,20 +88,21 @@ label bounds(794, 670, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022"
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
     <CsOptions>
-        ;-n --displays -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5
-        ;-n -+rtmidi=NULL -M0 --displays -m0 --midi-key-cps=4 --midi-velocity-amp=5
+        ;;-n --displays -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5
+        ;;-n -+rtmidi=NULL -M0 --displays -m0 --midi-key-cps=4 --midi-velocity-amp=5
         -n -+rtmidi=NULL -M0 --displays -m0 -+raw_controller_mode=1
         ;-n -+rtmidi=NULL -Ma --displays -m128
+        ;-dm0 -n -+rtmidi=NULL -M0
     </CsOptions>
 <CsInstruments>
 
 ; Initialize the global variables. 
 ;sr=48000
 ;sr is set by the host
-kr=60
+kr=2400
 ksmps = 32
 nchnls = 2
-0dbfs = 0.75
+0dbfs = 1
 
 /* Conversion tables from SID 0 to F values to seconds for CSound's 'madsr' opcode
 
@@ -168,7 +169,23 @@ giNOI = 128
 
 gkPresetNumber = 0
 
-;massign 0,0
+;massign 0,2
+;maxalloc 3,1
+
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;instr    2                                ; RESPOND TO MIDI NOTES
+;	icps = cpsmidi()
+;	inum = notnum()
+;	givel = veloc(0,1)
+;	gkVel init givel
+;	gkcps = icps
+;	gicps init icps
+;    event_i "i",3,0,-1, icps, inum
+;    printk2 inum
+;    ;printk2 gkVel
+;	gkNewNote init 1
+;endin
+
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;instrument will be triggered by keyboard widget or MIDI event
 instr SYNTH
@@ -179,6 +196,10 @@ instr SYNTH
 	aPUL init 0
 	aNOI init 0
 	kmasterVolume init 1
+	
+	; the K rate is set to 2400 so this needs to be krate / 60hz = 40
+	kSIDDivider init 40
+	kSIDDividerCounter init 1
 	
 	; Pulse Width Modulator
 	kPWTableIndex init -1
@@ -238,96 +259,101 @@ instr SYNTH
  		printks "status:%d%tchannel:%d%tdata1:%d%tdata2:%d%n",0,kstatus,kchan,kdata1,kdata2
  	endif
 	*/
-	; Pulse Width Modulator
-	if kPWDelayCounter != -1 then
-		kPWIndexOld = kPWTableIndex
-		kPWDelayCounter -= 1
-		if kPWDelayCounter < 0 then
-			kPWTableIndex += 1
-			if gkPWTable01[kPWTableIndex][0] = -1 then
-				kPWTableIndex = gkPWTable01[kPWTableIndex][1]
+	kSIDDividerCounter -= 1
+	if kSIDDividerCounter == 0 then
+		kSIDDividerCounter = kSIDDivider
+		
+		; Pulse Width Modulator
+		if kPWDelayCounter != -1 then
+			kPWIndexOld = kPWTableIndex
+			kPWDelayCounter -= 1
+			if kPWDelayCounter < 0 then
+				kPWTableIndex += 1
+				if gkPWTable01[kPWTableIndex][0] = -1 then
+					kPWTableIndex = gkPWTable01[kPWTableIndex][1]
+				endif
+				kPWDelayCounter = gkPWTable01[kPWTableIndex][2]
+				kPWPhaseIndex = gkPWTable01[kPWTableIndex][1]
+				if gkPWTable01[kPWTableIndex][0] > 0 then
+					kPulseWidth = gkPWTable01[kPWTableIndex][0]
+				endif
+			else
+				kPulseWidth += gkPWTable01[kPWTableIndex][1]
 			endif
-			kPWDelayCounter = gkPWTable01[kPWTableIndex][2]
-			kPWPhaseIndex = gkPWTable01[kPWTableIndex][1]
-			if gkPWTable01[kPWTableIndex][0] > 0 then
-				kPulseWidth = gkPWTable01[kPWTableIndex][0]
-			endif
-		else
-			kPulseWidth += gkPWTable01[kPWTableIndex][1]
-		endif
-		if kPWIndexOld != kPWTableIndex then
-			SWidgetChannel = sprintfk("pwdatarow%d", kPWIndexOld)
-    		cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
-    	endif
-		SWidgetChannel = sprintfk("pwdatarow%d", kPWTableIndex)
-    	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
-	endif
-	
-	; Note & Frequency Modulator
-	if kFREQDelayCounter != -1 then
-		kFREQIndexOld = kFREQTableIndex
-		kFREQDelayCounter -= 1
-		if kFREQDelayCounter < 0 then
-			kFREQTableIndex += 1
-			if gkFREQTable01[kFREQTableIndex][0] = -1 then
-				kFREQTableIndex = gkFREQTable01[kFREQTableIndex][1]
-			endif
-			kFREQDelayCounter = gkFREQTable01[kFREQTableIndex][2]
-			kNote = iMidiNote + gkFREQTable01[kFREQTableIndex][0]
-			kFREQ = mtof(kNote)
-		endif
-		kFREQ += gkFREQTable01[kFREQTableIndex][1]
-		if kFREQIndexOld != kFREQTableIndex then
-			SWidgetChannel = sprintfk("freqdatarow%d", kFREQIndexOld)
-    		cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
-    	endif
-		SWidgetChannel = sprintfk("freqdatarow%d", kFREQTableIndex)
-    	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
-	endif
-	
-	; Waveform Modulator
-	if kWFDelayCounter != -1 then
-		kWFIndexOld = kWFTableIndex
-		kWFDelayCounter -= 1
-		if kWFDelayCounter < 0 then
-			kWFTableIndex += 1
-			if gkWFTable01[kWFTableIndex][0] = -1 then
-				kWFTableIndex = gkWFTable01[kWFTableIndex][1]
-			endif
-			kWFDelayCounter = gkWFTable01[kWFTableIndex][2]
-			kWaveform = gkWFTable01[kWFTableIndex][0]
-			if kWFIndexOld != kWFTableIndex then
-				SWidgetChannel = sprintfk("wfdatarow%d", kWFIndexOld)
+			if kPWIndexOld != kPWTableIndex then
+				SWidgetChannel = sprintfk("pwdatarow%d", kPWIndexOld)
     			cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
     		endif
-			SWidgetChannel = sprintfk("wfdatarow%d", kWFTableIndex)
+			SWidgetChannel = sprintfk("pwdatarow%d", kPWTableIndex)
     		cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 		endif
-	endif
 	
-	; Filter Modulator
-	if kFILTDelayCounter != -1 then
-		kFILTIndexOld = kFILTTableIndex
-		kFILTDelayCounter -= 1
-		if kFILTDelayCounter < 0 then
-			kFILTTableIndex += 1
-			if gkFILTTable01[kFILTTableIndex][0] = -1 then
-				kFILTTableIndex = gkFILTTable01[kFILTTableIndex][1]
+		; Note & Frequency Modulator
+		if kFREQDelayCounter != -1 then
+			kFREQIndexOld = kFREQTableIndex
+			kFREQDelayCounter -= 1
+			if kFREQDelayCounter < 0 then
+				kFREQTableIndex += 1
+				if gkFREQTable01[kFREQTableIndex][0] = -1 then
+					kFREQTableIndex = gkFREQTable01[kFREQTableIndex][1]
+				endif
+				kFREQDelayCounter = gkFREQTable01[kFREQTableIndex][2]
+				kNote = iMidiNote + gkFREQTable01[kFREQTableIndex][0]
+				kFREQ = mtof(kNote)
 			endif
-			kFILTDelayCounter = gkFILTTable01[kFILTTableIndex][2]
-			kFILTAmpIndex = gkFILTTable01[kFILTTableIndex][1]
-			if gkFILTTable01[kFILTTableIndex][0] > 0 then
-				kFilterFreq = gkFILTTable01[kFILTTableIndex][0]
+			kFREQ += gkFREQTable01[kFREQTableIndex][1]
+			if kFREQIndexOld != kFREQTableIndex then
+				SWidgetChannel = sprintfk("freqdatarow%d", kFREQIndexOld)
+    			cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    		endif
+				SWidgetChannel = sprintfk("freqdatarow%d", kFREQTableIndex)
+    			cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 			endif
-		else
-			kFilterFreq += gkFILTTable01[kFILTTableIndex][1]
+	
+			; Waveform Modulator
+			if kWFDelayCounter != -1 then
+				kWFIndexOld = kWFTableIndex
+				kWFDelayCounter -= 1
+				if kWFDelayCounter < 0 then
+					kWFTableIndex += 1
+					if gkWFTable01[kWFTableIndex][0] = -1 then
+						kWFTableIndex = gkWFTable01[kWFTableIndex][1]
+					endif
+					kWFDelayCounter = gkWFTable01[kWFTableIndex][2]
+					kWaveform = gkWFTable01[kWFTableIndex][0]
+					if kWFIndexOld != kWFTableIndex then
+						SWidgetChannel = sprintfk("wfdatarow%d", kWFIndexOld)
+    					cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    				endif
+					SWidgetChannel = sprintfk("wfdatarow%d", kWFTableIndex)
+    				cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
+				endif
+			endif
+	
+			; Filter Modulator
+			if kFILTDelayCounter != -1 then
+				kFILTIndexOld = kFILTTableIndex
+				kFILTDelayCounter -= 1
+				if kFILTDelayCounter < 0 then
+					kFILTTableIndex += 1
+					if gkFILTTable01[kFILTTableIndex][0] = -1 then
+						kFILTTableIndex = gkFILTTable01[kFILTTableIndex][1]
+					endif
+					kFILTDelayCounter = gkFILTTable01[kFILTTableIndex][2]
+					kFILTAmpIndex = gkFILTTable01[kFILTTableIndex][1]
+					if gkFILTTable01[kFILTTableIndex][0] > 0 then
+						kFilterFreq = gkFILTTable01[kFILTTableIndex][0]
+					endif
+				else
+					kFilterFreq += gkFILTTable01[kFILTTableIndex][1]
+				endif
+				if kFILTIndexOld != kFILTTableIndex then
+					SWidgetChannel = sprintfk("filtdatarow%d", kFILTIndexOld)
+    				cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    		endif
+			SWidgetChannel = sprintfk("filtdatarow%d", kFILTTableIndex)
+    		cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 		endif
-		if kFILTIndexOld != kFILTTableIndex then
-			SWidgetChannel = sprintfk("filtdatarow%d", kFILTIndexOld)
-    		cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
-    	endif
-		SWidgetChannel = sprintfk("filtdatarow%d", kFILTTableIndex)
-    	cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
 	endif
 	
 ;---Oscillator Section
@@ -385,16 +411,10 @@ instr SYNTH
 	endif
 	*/
 	cabbageSetValue("V1Frequency", kFREQ)
+	cabbageSetValue("V1Waveform", kWaveform, changed:k(kWaveform))
+	cabbageSetValue("V1PulseWidth", kPulseWidth, changed(kPulseWidth))
+	cabbageSetValue("vMeter1", kEnv, changed(kEnv))
 
-	kPulseWidthchanged = changed(kPulseWidth)
-	if kPulseWidthchanged == 1 then
-		cabbageSetValue("V1PulseWidth", kPulseWidth)
-	endif
-
-	kEnvChanged = changed(kEnv)
-	if kEnvChanged == 1 then
-		cabbageSetValue("vMeter1", kEnv)
-	endif
 endin
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 instr GUI
