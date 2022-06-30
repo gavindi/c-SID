@@ -91,6 +91,7 @@ label bounds(794, 670, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022"
         ;-n --displays -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5
         ;-n -+rtmidi=NULL -M0 --displays -m0 --midi-key-cps=4 --midi-velocity-amp=5
         -n -+rtmidi=NULL -M0 --displays -m0 -+raw_controller_mode=1
+        ;-n -+rtmidi=NULL -Ma --displays -m128
     </CsOptions>
 <CsInstruments>
 
@@ -166,9 +167,11 @@ giPUL = 64
 giNOI = 128
 
 gkPresetNumber = 0
+
+;massign 0,0
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;instrument will be triggered by keyboard widget or MIDI event
-instr 1024
+instr SYNTH
 	aOut init 0
 	aMix init 0
 	aTRI init 0
@@ -227,7 +230,14 @@ instr 1024
 	;kWaveformchanged changed kWaveform	
 	;kPulseWidth cabbageGetValue "V1PulseWidth"
 	;printk2 kNoteRelease
-	
+	/*
+	kstatus, kchan, kdata1, kdata2  midiin            ;read in midi
+	ktrigger changed kstatus, kchan, kdata1, kdata2 ;trigger if midi data change
+ 	if ktrigger=1 && kstatus!=0 then          ;if status byte is non-zero...
+		; -- print midi data to the terminal with formatting --
+ 		printks "status:%d%tchannel:%d%tdata1:%d%tdata2:%d%n",0,kstatus,kchan,kdata1,kdata2
+ 	endif
+	*/
 	; Pulse Width Modulator
 	if kPWDelayCounter != -1 then
 		kPWIndexOld = kPWTableIndex
@@ -385,18 +395,9 @@ instr 1024
 	if kEnvChanged == 1 then
 		cabbageSetValue("vMeter1", kEnv)
 	endif
-
-    /*
-	kstatus, kchan, kdata1, kdata2  midiin              ;read in midi
-	ktrigger changed kstatus, kchan, kdata1, kdata2     ;trigger if midi data change
-	if ktrigger = 1 && kstatus != 0 then                ;if status byte is non-zero...
-    	; -- print midi data to the terminal with formatting --
-		printks "status:%d%tchannel:%d%tdata1:%d%tdata2:%d%n", 0, kstatus, kchan, kdata1, kdata2
-	endif
-	*/
 endin
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-instr 2048
+instr GUI
 	; Set-up Pulse Width Modulation GUI Elements
 	; Three separate bold with each colum separate as colums may have a range of limits and increments specific to it.	
     iY init 0
@@ -516,7 +517,7 @@ f 32 	0 	512 	7 	-1 512 1 ;Sawtooth (0x20)
 f 64 	0 	1024 	7 	1 512 1 0 -1 512 -1 ;Square (0x40)
 
 ;causes Csound to run for about 7000 years...
-i2048 0 z
+i"GUI" 0 z
 ;f0 z
 </CsScore>
 
