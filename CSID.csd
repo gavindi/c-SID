@@ -17,7 +17,6 @@
 //  ---------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <Cabbage>
-bounds(0, 0, 0, 0)
 
 ;form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
 form caption("c-SID") size(1000, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255)
@@ -100,7 +99,7 @@ label bounds(794, 670, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022"
 ;sr=48000
 ;sr is set by the host
 kr=2400
-ksmps = 32
+ksmps = 64
 nchnls = 2
 0dbfs = 1
 
