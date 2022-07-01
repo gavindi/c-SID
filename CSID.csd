@@ -83,6 +83,8 @@ hslider bounds(16, 400, 186, 25) channel("filttableselect") range(0, 31, 0, 1, 1
 
 label bounds(794, 670, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
 
+nslider bounds(428, 204, 100, 22) channel("nslider10038") range(0, 100, 0, 1, 0.01) valueTextBox(1)   colour(0, 0, 128, 8) text("Preset") textColour(66, 171, 41, 255)
+combobox bounds(340, 204, 80, 20) channel("combo10039") channelType("string") value("0") 
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
@@ -126,34 +128,35 @@ DEC	HEX	(Time/Cycle)	(Time/Cycle)
 */
 giEnvAttack[] fillarray 0.002, 0.008, 0.016, 0.024, 0.038, 0.056, 0.068, 0.080, 0.1, 0.25, 0.5, 0.8, 1, 3, 5, 8
 giEnvDecayRelease[] fillarray 0.006, 0.024, 0.048, 0.072, 0.114, 0.168, 0.204, 0.24, 0.3, 0.75, 1.5, 2.4, 3, 9, 15, 24
-						
-gkPWTable01[][] init 16,3
+
+;					512 - 32 x the 16 row length of each table - table found by tablenum * 32
+gkPWTable01[][] init 512,3
 						;Absolute Val or -1 to loop|Phase/Index|Count/Delay
 gkPWTable01 fillarray	1, 40, 20,
 						0, 10, 10,
 						0, -10, 10,
 						-1, 1, 0
 
-gkFREQTable01[][] init 16,3
-gkFREQTable02[][] init 16,3
+gkFREQTable01[][] init 512,3
 gkFREQTable01 = fillarray(0, 0, 17,
 						0, 0.6, 5,
 						0, -0.6, 5,
 						-1, 1, 0,
 						0, 0, -1)
-gkFREQTable02 fillarray	0, 0, 0,
+;gkFREQTable02[][] init 16,3
+/*gkFREQTable02 = fillarray(0, 0, 0,
 						4, 0, 0,
 						7, 0, 0,
 						-1, 1, 0,
-						0, 0, -1
-						
-gkWFTable01[][] init 16,3
-gkWFTable01 fillarray	16, 0, 2,
+						0, 0, -1)
+*/						
+gkWFTable01[][] init 512,3
+gkWFTable01 = fillarray(16, 0, 2,
 						64, 0, 10,
 						-1, 1, 0,
-						0, 0, -1
+						0, 0, -1)
 
-gkFILTTable01[][] init 16,3
+gkFILTTable01[][] init 512,3
 gkFILTTable01 = fillarray(0, 0, 17,
 						0, 0.6, 5,
 						0, -0.6, 5,
@@ -166,7 +169,22 @@ giSAW = 32
 giPUL = 64
 giNOI = 128
 
-gkPresetNumber = 0
+gkPresetNumber init 0
+gSPresetName[] init 255
+gSPresetName = fillarray("Popper Pulse", "Triangle")
+
+/*1st index (row) is preset number and 2nd index (column) are:
+	[][0]: Attack
+	[][1]: Decay
+	[][2]: SUstain
+	[][3]: Release
+	[][8]: Table# Waveform Modulator
+	[][9]: Table# Frequency Modulator
+	[][10]: Table# Pulse Width Modulator
+	[][11]: Table# Filter Modulator
+	*/	
+gkPresetConfig[][] init 255,32
+gkPresetConfig = fillarray(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
 ;massign 0,2
 ;maxalloc 3,1
@@ -265,19 +283,20 @@ instr SYNTH
 		; Pulse Width Modulator
 		if kPWDelayCounter != -1 then
 			kPWIndexOld = kPWTableIndex
+			kTabNum = gkPresetConfig[gkPresetNumber][10]*32
 			kPWDelayCounter -= 1
 			if kPWDelayCounter < 0 then
 				kPWTableIndex += 1
-				if gkPWTable01[kPWTableIndex][0] = -1 then
-					kPWTableIndex = gkPWTable01[kPWTableIndex][1]
+				if gkPWTable01[kTabNum+kPWTableIndex][0] = -1 then
+					kPWTableIndex = gkPWTable01[kTabNum+kPWTableIndex][1]
 				endif
-				kPWDelayCounter = gkPWTable01[kPWTableIndex][2]
-				kPWPhaseIndex = gkPWTable01[kPWTableIndex][1]
-				if gkPWTable01[kPWTableIndex][0] > 0 then
-					kPulseWidth = gkPWTable01[kPWTableIndex][0]
+				kPWDelayCounter = gkPWTable01[kTabNum+kPWTableIndex][2]
+				kPWPhaseIndex = gkPWTable01[kTabNum+kPWTableIndex][1]
+				if gkPWTable01[kTabNum+kPWTableIndex][0] > 0 then
+					kPulseWidth = gkPWTable01[kTabNum+kPWTableIndex][0]
 				endif
 			else
-				kPulseWidth += gkPWTable01[kPWTableIndex][1]
+				kPulseWidth += gkPWTable01[kTabNum+kPWTableIndex][1]
 			endif
 			if kPWIndexOld != kPWTableIndex then
 				SWidgetChannel = sprintfk("pwdatarow%d", kPWIndexOld)
@@ -290,17 +309,18 @@ instr SYNTH
 		; Note & Frequency Modulator
 		if kFREQDelayCounter != -1 then
 			kFREQIndexOld = kFREQTableIndex
+			kTabNum = gkPresetConfig[gkPresetNumber][10]*32
 			kFREQDelayCounter -= 1
 			if kFREQDelayCounter < 0 then
 				kFREQTableIndex += 1
-				if gkFREQTable01[kFREQTableIndex][0] = -1 then
-					kFREQTableIndex = gkFREQTable01[kFREQTableIndex][1]
+				if gkFREQTable01[kTabNum+kFREQTableIndex][0] = -1 then
+					kFREQTableIndex = gkFREQTable01[kTabNum+kFREQTableIndex][1]
 				endif
-				kFREQDelayCounter = gkFREQTable01[kFREQTableIndex][2]
-				kNote = iMidiNote + gkFREQTable01[kFREQTableIndex][0]
+				kFREQDelayCounter = gkFREQTable01[kTabNum+kFREQTableIndex][2]
+				kNote = iMidiNote + gkFREQTable01[kTabNum+kFREQTableIndex][0]
 				kFREQ = mtof(kNote)
 			endif
-			kFREQ += gkFREQTable01[kFREQTableIndex][1]
+			kFREQ += gkFREQTable01[kTabNum+kFREQTableIndex][1]
 			if kFREQIndexOld != kFREQTableIndex then
 				SWidgetChannel = sprintfk("freqdatarow%d", kFREQIndexOld)
     			cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
@@ -312,14 +332,16 @@ instr SYNTH
 			; Waveform Modulator
 			if kWFDelayCounter != -1 then
 				kWFIndexOld = kWFTableIndex
+				kTabNum = gkPresetConfig[gkPresetNumber][8]*32   
 				kWFDelayCounter -= 1
 				if kWFDelayCounter < 0 then
 					kWFTableIndex += 1
-					if gkWFTable01[kWFTableIndex][0] = -1 then
-						kWFTableIndex = gkWFTable01[kWFTableIndex][1]
+					;if gkWFTable01[kWFTableIndex][0] = -1 then
+					if gkWFTable01[kTabNum+kWFTableIndex][0] = -1 then
+						kWFTableIndex = gkWFTable01[kTabNum+kWFTableIndex][1]
 					endif
-					kWFDelayCounter = gkWFTable01[kWFTableIndex][2]
-					kWaveform = gkWFTable01[kWFTableIndex][0]
+					kWFDelayCounter = gkWFTable01[kTabNum+kWFTableIndex][2]
+					kWaveform = gkWFTable01[kTabNum+kWFTableIndex][0]
 					if kWFIndexOld != kWFTableIndex then
 						SWidgetChannel = sprintfk("wfdatarow%d", kWFIndexOld)
     					cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
@@ -332,19 +354,20 @@ instr SYNTH
 			; Filter Modulator
 			if kFILTDelayCounter != -1 then
 				kFILTIndexOld = kFILTTableIndex
+				kTabNum = gkPresetConfig[gkPresetNumber][11]*32
 				kFILTDelayCounter -= 1
 				if kFILTDelayCounter < 0 then
 					kFILTTableIndex += 1
-					if gkFILTTable01[kFILTTableIndex][0] = -1 then
-						kFILTTableIndex = gkFILTTable01[kFILTTableIndex][1]
+					if gkFILTTable01[kTabNum+kFILTTableIndex][0] = -1 then
+						kFILTTableIndex = gkFILTTable01[kTabNum+kFILTTableIndex][1]
 					endif
-					kFILTDelayCounter = gkFILTTable01[kFILTTableIndex][2]
-					kFILTAmpIndex = gkFILTTable01[kFILTTableIndex][1]
-					if gkFILTTable01[kFILTTableIndex][0] > 0 then
-						kFilterFreq = gkFILTTable01[kFILTTableIndex][0]
+					kFILTDelayCounter = gkFILTTable01[kTabNum+kFILTTableIndex][2]
+					kFILTAmpIndex = gkFILTTable01[kTabNum+kFILTTableIndex][1]
+					if gkFILTTable01[kTabNum+kFILTTableIndex][0] > 0 then
+						kFilterFreq = gkFILTTable01[kTabNum+kFILTTableIndex][0]
 					endif
 				else
-					kFilterFreq += gkFILTTable01[kFILTTableIndex][1]
+					kFilterFreq += gkFILTTable01[kTabNum+kFILTTableIndex][1]
 				endif
 				if kFILTIndexOld != kFILTTableIndex then
 					SWidgetChannel = sprintfk("filtdatarow%d", kFILTIndexOld)
@@ -358,7 +381,8 @@ instr SYNTH
 ;---Oscillator Section
 	if (kWaveform & giTRI) != 0 then
 		;aOut vco2 iMidiVelocity, iNoteFrequency ; Sawtooth - Should be Triangle but I'm working on it.
-		aTRI = oscil(iRawMidiVelocity/127, kFREQ, giTRI)
+		;aTRI = oscil(iRawMidiVelocity/127, kFREQ, giTRI)
+		aTRI = vco2(iRawMidiVelocity/127, kFREQ, 12, kPulseWidth/4096)
 	else
 		aTRI = 1
 	endif
@@ -423,11 +447,11 @@ instr GUI
     while iY < 16 do
     	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+1*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(128, 128, 128, 8) parent(\"pwmtablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+2*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-1\"), range(-16384,16383,0,1,1), colour(28, 128, 128, 8) parent(\"pwmtablegroup\")", -18+2*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"pwmtablegroup\")", -18+3*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-2\"), range(-1,16384,0,1,1), colour(28, 128, 128, 8) parent(\"pwmtablegroup\")", -18+3*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
@@ -437,11 +461,11 @@ instr GUI
     while iY < 16 do
     	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+1*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(28, 128, 128, 8) parent(\"freqtablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+2*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-1\"), range(-16384,16383,0,1,1), colour(28, 128, 128, 8) parent(\"freqtablegroup\")", -18+2*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"freqtablegroup\")", -18+3*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-2\"), range(-1,16384,0,1,1), colour(28, 128, 128, 8) parent(\"freqtablegroup\")", -18+3*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
@@ -451,11 +475,11 @@ instr GUI
     while iY < 16 do
     	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+1*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(28, 128, 128, 8) parent(\"wftablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+2*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-1\"), range(-16384,16383,0,1,1), colour(28, 128, 128, 8) parent(\"wftablegroup\")", -18+2*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"wftablegroup\")", -18+3*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-2\"), range(-1,16384,0,1,1), colour(28, 128, 128, 8) parent(\"wftablegroup\")", -18+3*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
@@ -465,11 +489,11 @@ instr GUI
     while iY < 16 do
     	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"filtdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"filttablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-0\"), range(-1,65535,0,1,1), colour(16, 16, 16) parent(\"filttablegroup\")", -18+1*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-0\"), range(-1,65535,0,1,1), colour(28, 128, 128, 8) parent(\"filttablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-1\"), range(-16384,16383,0,1,1), colour(16, 16, 16) parent(\"filttablegroup\")", -18+2*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-1\"), range(-16384,16383,0,1,1), colour(28, 128, 128, 8) parent(\"filttablegroup\")", -18+2*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
-		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-2\"), range(-1,16384,0,1,1), colour(16, 16, 16) parent(\"filttablegroup\")", -18+3*50, 42+iY*22, iY)
+		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-2\"), range(-1,16384,0,1,1), colour(28, 128, 128, 8) parent(\"filttablegroup\")", -18+3*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
 		iY += 1
 	od
