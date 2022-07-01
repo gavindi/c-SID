@@ -1,4 +1,4 @@
-//  ---------------------------------------------------------------------------
+ //  ---------------------------------------------------------------------------
 //  This file is part of c-SID, a MOS6581 SID music routine as a VST.
 //  Copyright (C) 2022  Gavin Graham <gavindi@gmail.com>
 //
@@ -185,6 +185,7 @@ gSPresetName = fillarray("Popper Pulse", "Triangle")
 	*/	
 gkPresetConfig[][] init 255,32
 gkPresetConfig = fillarray(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+
 
 ;massign 0,2
 ;maxalloc 3,1
@@ -498,22 +499,26 @@ instr GUI
 		iY += 1
 	od
 	
-	; Populate the widggets from the table arrays.
+	; Populate the widgets from the table arrays.
 	iY init 0
 	while iY < 16 do
 		iX init 0
 		while iX < 3 do
+			kTabNum = gkPresetConfig[gkPresetNumber][10]*32
 			SWidgetChannel = sprintf("pwdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkPWTable01,iY,iX))
+			cabbageSetValue(SWidgetChannel, i(gkPWTable01,i(kTabNum)+iY,iX))
 			
+			kTabNum = gkPresetConfig[gkPresetNumber][9]*32
 			SWidgetChannel = sprintf("freqdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkFREQTable01,iY,iX))
+			cabbageSetValue(SWidgetChannel, i(gkFREQTable01,i(kTabNum)+iY,iX))
 			
+			kTabNum = gkPresetConfig[gkPresetNumber][8]*32
 			SWidgetChannel = sprintf("wfdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkWFTable01,iY,iX))
+			cabbageSetValue(SWidgetChannel, i(gkWFTable01,i(kTabNum)+iY,iX))
 			
+			kTabNum = gkPresetConfig[gkPresetNumber][11]*32
 			SWidgetChannel = sprintf("filtdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkFILTTable01,iY,iX))
+			cabbageSetValue(SWidgetChannel, i(gkFILTTable01,i(kTabNum)+iY,iX))
 			
 			iX += 1
 		od
@@ -528,20 +533,28 @@ instr GUI
     		while kX < 3 do
     			SWidgetChannel = sprintfk("pwdataentry%d-%d", kY, kX)
 				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
-    				gkPWTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+					kTabNum = gkPresetConfig[gkPresetNumber][10]*32
+    				gkPWTable01[kTabNum+kY][kX] = cabbageGetValue(SWidgetChannel)
 				endif
+				
 				SWidgetChannel = sprintfk("freqdataentry%d-%d", kY, kX)
 				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
-    				gkFREQTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+					kTabNum = gkPresetConfig[gkPresetNumber][9]*32
+    				gkFREQTable01[kTabNum+kY][kX] = cabbageGetValue(SWidgetChannel)
 				endif
+				
 				SWidgetChannel = sprintfk("wfdataentry%d-%d", kY, kX)
 				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
-    				gkWFTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+					kTabNum = gkPresetConfig[gkPresetNumber][8]*32
+    				gkWFTable01[kTabNum+kY][kX] = cabbageGetValue(SWidgetChannel)
 				endif
+				
 				SWidgetChannel = sprintfk("filtdataentry%d-%d", kY, kX)
 				if changed(cabbageGetValue(SWidgetChannel)) != 0 then
-    				gkFILTTable01[kY][kX] = cabbageGetValue(SWidgetChannel)
+					kTabNum = gkPresetConfig[gkPresetNumber][11]*32
+    				gkFILTTable01[kTabNum+kY][kX] = cabbageGetValue(SWidgetChannel)
 				endif
+				
 				kX += 1
 			od
         	kY += 1
