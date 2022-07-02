@@ -31,16 +31,19 @@ rslider bounds(4, 238, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001
 
 ;Manual adjusters
 groupbox bounds(304, 8, 228, 224) channel("adjustersgroup1") text("Adjusters") outlineColour(16, 16, 16, 255) outlineThickness(3)
-hslider bounds(6, 36, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
-hslider bounds(6, 86, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
-hslider bounds(6, 136, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
+nslider bounds(106, 36, 100, 22) channel("nslider10038") range(0, 100, 0, 1, 0) valueTextBox(1)   colour(0, 0, 128, 8) text("Preset") textColour(66, 171, 41, 255) parent("adjustersgroup1")
+combobox bounds(6, 36, 80, 22) channel("combo10039") channelType("string") value("0") parent("adjustersgroup1")
+hslider bounds(6, 76, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
+hslider bounds(6, 106, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
+hslider bounds(6, 136, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 255, 255) colour(0, 255, 0, 255) parent ("adjustersgroup1")
+hslider bounds(6, 166, 216, 50) channel("V1FiltFreq") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Filter Freq.") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 255, 255) colour(0, 255, 0, 255) parent ("adjustersgroup1")
 
 ;Envelope (ADSR)
 groupbox bounds(70, 8, 227, 224) channel("envelopegroup1") text("Envelope") outlineColour(16, 16, 16, 255) outlineThickness(3)
 vslider bounds(14, 30, 50, 180) channel("V1EnvAttack") range(0, 15, 0, 1, 1) text("Attack") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
 vslider bounds(64, 30, 50, 180) channel("V1EnvDecay") range(0, 15, 7, 1, 1) text("Decay") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
 vslider bounds(114, 30, 50, 180) channel("V1EnvSustain") range(1, 15, 6, 1, 1) text("Sustain") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
-vslider bounds(165, 30, 50, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
+vslider bounds(165, 30, 100, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
 
 ;Display
 groupbox bounds(800, 48, 134, 115) channel("waveformdisp01") text("Oscilloscope")  outlineColour(16, 128, 16, 255) outlineThickness(3) colour(0, 8, 0, 255)
@@ -87,8 +90,6 @@ hslider bounds(16, 400, 186, 25) channel("fctltableselect") range(0, 31, 0, 1, 1
 
 label bounds(970, 52, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
 
-nslider bounds(428, 204, 100, 22) channel("nslider10038") range(0, 100, 0, 1, 0.01) valueTextBox(1)   colour(0, 0, 128, 8) text("Preset") textColour(66, 171, 41, 255)
-combobox bounds(340, 204, 80, 20) channel("combo10039") channelType("string") value("0") 
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
@@ -170,15 +171,26 @@ gkFILTTable01 = fillarray(0, 0, 17,
 gkFCTLTable01[][] init 512,3
 gkFCTLTable01 = fillarray(0, 0, -1)
 
-; - SID Control Register Waveforms
+; - SID Control Register Waveforms & Controls
+giGATE = 1
+giSYNC = 2
+giRING = 4
+giTEST = 8
 giTRI = 16
 giSAW = 32
 giPUL = 64
 giNOI = 128
 
+; - SID Filter Type Bits
+giLowPass = 16
+giBandPass = 32
+giHighPass = 64
+
+; - Instrument/patch/preset selector
 gkPresetNumber init 0
+; Friendly Name of instrument/patch/preset
 gSPresetName[] init 255
-gSPresetName = fillarray("Popper Pulse", "Triangle")
+gSPresetName = fillarray("Popper Pulse", "Triangle", "SawTooth", "Square", "Saw Maj Arp")
 
 /*1st index (row) is preset number and 2nd index (column) are:
 	[][0]: Attack
@@ -404,10 +416,10 @@ instr SYNTH
 					if gkFCTLTable01[kTabNum+kFCTableIndex][0] = -1 then
 						kFCTableIndex = gkFCTLTable01[kTabNum+kFCTableIndex][1]
 					endif
-					kWFDelayCounter = gkFCTLTable01[kTabNum+kFCTableIndex][2]
+					kFCDelayCounter = gkFCTLTable01[kTabNum+kFCTableIndex][2]
 					kFCFiltType = gkFCTLTable01[kTabNum+kFCTableIndex][0]
 					kFCResonance = gkFCTLTable01[kTabNum+kFCTableIndex][1]
-					if kWFIndexOld != kWFTableIndex then
+					if kFCIndexOld != kFCTableIndex then
 						SWidgetChannel = sprintfk("fctldatarow%d", kFCIndexOld)
     					cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
     				endif
@@ -448,10 +460,22 @@ instr SYNTH
     else
     	aNOI = 1
 	endif
-    ;Combine all possible waveforms
+    ;Combine all possible waveforms - THIS NEEDS TO BEN CHANGED TO ANDING OF WAVEFORMS TOGETHER
 	aOut = 1 - sum(aTRI, aSAW, aPUL, aNOI) / 4
+	
 	;Apply Filter
-	;aOut = moogladder(aOut, kFilterFreq, 0.9)
+	if (kFCFiltType & giLowPass) != 0 then
+	
+	endif
+	
+	if (kFCFiltType & giBandPass) != 0 then
+	
+	endif
+	
+	if (kFCFiltType & giHighPass) != 0 then
+	
+	endif
+	
 	;Apply ADSR
 	kEnv = madsr(giEnvAttack[iADSRAttack], giEnvDecayRelease[iADSRDecay], iADSRSustain/15, giEnvDecayRelease[iADSRRelease])
 
