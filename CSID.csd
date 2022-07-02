@@ -90,6 +90,9 @@ hslider bounds(16, 400, 186, 25) channel("fctltableselect") range(0, 31, 0, 1, 1
 
 label bounds(970, 52, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
 
+;Things that I'm testing
+filebutton bounds(686, 164, 80, 20) channel("filebutton10046") text("Load Presets")
+button bounds(686, 188, 80, 40) channel("button10047")
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
@@ -206,9 +209,17 @@ gSPresetName = fillarray("Popper Pulse", "Triangle", "SawTooth", "Square", "Saw 
 gkPresetConfig[][] init 255,32
 gkPresetConfig = fillarray(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
-
 ;massign 0,2
 ;maxalloc 3,1
+;hdf5write("waffles.preset", gSPresetName)
+hdf5write("cSID.presets", gkPresetConfig, gkPWTable01, gkFREQTable01, gkWFTable01, gkFILTTable01, gkFCTLTable01)
+
+;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+opcode FirstEl, k, k[]
+	kArr[] xin
+	kOut = kArr[0]
+	xout kOut
+endop
 
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;instr    2                                ; RESPOND TO MIDI NOTES
