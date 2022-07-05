@@ -17,13 +17,12 @@
 //  ---------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <Cabbage>
-openGL(1)
-;form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
-form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255) openGL(1)
+openGL(0)
+form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0, 0, 32, 255), typeface("PetMe642Y.ttf") titleBarColour(0, 0, 170, 255)
+;form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255) openGL(0)
 keyboard bounds(1, 702, 11199, 95) channel("keyboard") scrollbars(1) middleC(3)
 image bounds(860, 4, 475, 68) channel("image10032") file("c-SIDLogo-01.png")
 image bounds(772, 6, 340, 232) channel("image10030") file("1576596860commodoor64andtv.svg")
-groupbox bounds(67, 235, 1041, 435) channel("groupbox10031") colour(0, 0, 0, 255) lineThickness(0) outlineColour(0, 0, 0, 255)
 
 ;Volume Related
 vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(16, 128, 16) outlineThickness(3)
@@ -55,35 +54,35 @@ groupbox bounds(70, 238, 195, 430) channel("wftablegroup") text("Waveform Modula
 label bounds(32, 30, 50, 10) channel("wfwavelabel") text("Wave") fontStyle("plain") parent("wftablegroup")
 label bounds(80, 30, 50, 10) channel("wfamplabel") text("Amp") fontStyle("plain") parent("wftablegroup")
 label bounds(130, 30, 50, 10) channel("wfwaitlabel") text("Wait") fontStyle("plain") parent("wftablegroup")
-hslider bounds(16, 400, 186, 25) channel("wftableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("wftablegroup")
+hslider bounds(16, 400, 186, 25) channel("wftableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(204, 68, 204, 255) parent("wftablegroup")
 
 ;Pulse Width Modulator GUI elements
 groupbox bounds(490, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("pwdutylabel") text("Width") fontStyle("plain") parent("pwmtablegroup")
 label bounds(80, 30, 50, 10) channel("pwamplabel") text("Amp") fontStyle("plain") parent("pwmtablegroup")
 label bounds(130, 30, 50, 10) channel("pwwaitlabel") text("Wait") fontStyle("plain") parent("pwmtablegroup")
-hslider bounds(16, 400, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("pwmtablegroup")
+hslider bounds(16, 400, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(204, 68, 204, 255) parent("pwmtablegroup")
 
 ;Frequency Modulator GUI elements
 groupbox bounds(280, 238, 195, 430) channel("freqtablegroup") text("Frequency Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("freqfreqlabel") text("Freq") fontStyle("plain") parent("freqtablegroup")
 label bounds(80, 30, 50, 10) channel("freqamplabel") text("Amp") fontStyle("plain") parent("freqtablegroup")
 label bounds(130, 30, 50, 10) channel("freqwaitlabel") text("Wait") fontStyle("plain") parent("freqtablegroup")
-hslider bounds(16, 400, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("freqtablegroup")
+hslider bounds(16, 400, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(204, 68, 204, 255) parent("freqtablegroup")
 
 ;Filter Table Modulator GUI elements
-groupbox bounds(700, 238, 195, 430) channel("filttablegroup") text("Filter Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
+groupbox bounds(700, 238, 195, 430) channel("filttablegroup") text("Filter Freq. Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("filtdutylabel") text("Freq") fontStyle("plain") parent("filttablegroup")
 label bounds(80, 30, 50, 10) channel("filtamplabel") text("Amp") fontStyle("plain") parent("filttablegroup")
 label bounds(130, 30, 50, 10) channel("filtwaitlabel") text("Wait") fontStyle("plain") parent("filttablegroup")
-hslider bounds(16, 400, 186, 25) channel("filttableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("filttablegroup")
+hslider bounds(16, 400, 186, 25) channel("filttableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(204, 68, 204, 255) parent("filttablegroup")
 
 ;Filter & Control Table Modulator GUI elements
-groupbox bounds(910, 238, 195, 430) channel("fctltablegroup") text("Filter & Control Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
+groupbox bounds(910, 238, 195, 430) channel("fctltablegroup") text("Resonance & Ctrl Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("filttpyelabel") text("Type") fontStyle("plain") parent("fctltablegroup")
 label bounds(80, 30, 50, 10) channel("filtReslabel") text("Reso") fontStyle("plain") parent("fctltablegroup")
 label bounds(130, 30, 50, 10) channel("filtwaitlabel") text("Wait") fontStyle("plain") parent("fctltablegroup")
-hslider bounds(16, 400, 186, 25) channel("fctltableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("fctltablegroup")
+hslider bounds(16, 400, 186, 25) channel("fctltableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(204, 68, 204, 255) parent("fctltablegroup")
 
 ;Control Table Modulator GUI elements
 // Placeholder
@@ -166,9 +165,9 @@ gkWFTable01 = fillarray(16, 0, 2,
 						0, 0, -1)
 
 gkFILTTable01[][] init 512,3
-gkFILTTable01 = fillarray(0, 0, 17,
-						0, 0.6, 5,
-						0, -0.6, 5,
+gkFILTTable01 = fillarray(4000, 0, 17,
+						0, -0.6, 15,
+						0, -0.2, 805,
 						-1, 1, 0,
 						0, 0, -1)
 						
