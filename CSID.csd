@@ -17,33 +17,33 @@
 //  ---------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <Cabbage>
-
+openGL(1)
 ;form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,255,255), typeface("C64_Pro-STYLE.ttf")
-form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255)
+form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255) openGL(1)
 keyboard bounds(1, 702, 11199, 95) channel("keyboard") scrollbars(1) middleC(3)
 image bounds(860, 4, 475, 68) channel("image10032") file("c-SIDLogo-01.png")
 image bounds(772, 6, 340, 232) channel("image10030") file("1576596860commodoor64andtv.svg")
-groupbox bounds(67, 235, 1041, 435) channel("groupbox10031") colour(9, 106, 106, 255) lineThickness(0) outlineColour(16, 16, 16, 255)
+groupbox bounds(67, 235, 1041, 435) channel("groupbox10031") colour(0, 0, 0, 255) lineThickness(0) outlineColour(0, 0, 0, 255)
 
 ;Volume Related
 vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(16, 128, 16) outlineThickness(3)
 rslider bounds(4, 238, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255)
 
 ;Manual adjusters
-groupbox bounds(304, 8, 228, 224) channel("adjustersgroup1") text("Adjusters") outlineColour(16, 16, 16, 255) outlineThickness(3)
+groupbox bounds(304, 8, 228, 224) channel("adjustersgroup1") text("Adjusters") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 nslider bounds(106, 36, 100, 22) channel("nslider10038") range(0, 100, 0, 1, 0) valueTextBox(1)   colour(0, 0, 128, 8) text("Preset") textColour(66, 171, 41, 255) parent("adjustersgroup1")
 combobox bounds(6, 36, 80, 22) channel("combo10039") channelType("string") value("0") parent("adjustersgroup1")
-hslider bounds(6, 76, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
-hslider bounds(6, 106, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(0, 255, 0, 255) parent("adjustersgroup1")
-hslider bounds(6, 136, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 255, 255) colour(0, 255, 0, 255) parent ("adjustersgroup1")
-hslider bounds(6, 166, 216, 50) channel("V1FiltFreq") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Filter Freq.") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 255, 255) colour(0, 255, 0, 255) parent ("adjustersgroup1")
+hslider bounds(6, 76, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(170, 255, 102, 255) parent("adjustersgroup1")
+hslider bounds(6, 106, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(170, 255, 102, 255) parent("adjustersgroup1")
+hslider bounds(6, 136, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 255, 255) colour(170, 255, 102, 255) parent ("adjustersgroup1")
+hslider bounds(6, 166, 216, 50) channel("V1FiltFreq") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Filter Freq.") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 255, 255) colour(170, 255, 102, 255) parent ("adjustersgroup1")
 
 ;Envelope (ADSR)
-groupbox bounds(70, 8, 227, 224) channel("envelopegroup1") text("Envelope") outlineColour(16, 16, 16, 255) outlineThickness(3)
-vslider bounds(14, 30, 50, 180) channel("V1EnvAttack") range(0, 15, 0, 1, 1) text("Attack") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
-vslider bounds(64, 30, 50, 180) channel("V1EnvDecay") range(0, 15, 7, 1, 1) text("Decay") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
-vslider bounds(114, 30, 50, 180) channel("V1EnvSustain") range(1, 15, 6, 1, 1) text("Sustain") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
-vslider bounds(165, 30, 100, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(255, 255, 0, 255) trackerColour(0, 255, 255, 255) parent("envelopegroup1")
+groupbox bounds(70, 8, 227, 224) channel("envelopegroup1") text("Envelope") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
+vslider bounds(14, 30, 50, 180) channel("V1EnvAttack") range(0, 15, 0, 1, 1) text("Attack") textColour(255, 255, 255, 255) valueTextBox(1) colour(238, 238, 119, 255) trackerColour(170, 255, 102, 255) outlineColour(0, 136, 255, 255) parent("envelopegroup1")
+vslider bounds(64, 30, 50, 180) channel("V1EnvDecay") range(0, 15, 7, 1, 1) text("Decay") textColour(255, 255, 255, 255) valueTextBox(1) colour(238, 238, 119, 255) trackerColour(170, 255, 102, 255) parent("envelopegroup1")
+vslider bounds(114, 30, 50, 180) channel("V1EnvSustain") range(1, 15, 6, 1, 1) text("Sustain") textColour(255, 255, 255, 255) valueTextBox(1) colour(238, 238, 119, 255) trackerColour(170, 255, 102, 255) parent("envelopegroup1")
+vslider bounds(164, 30, 50, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(238, 238, 119, 255) trackerColour(170, 255, 102, 255) parent("envelopegroup1")
 
 ;Display
 groupbox bounds(800, 48, 134, 115) channel("waveformdisp01") text("Oscilloscope")  outlineColour(16, 128, 16, 255) outlineThickness(3) colour(0, 8, 0, 255)
@@ -51,35 +51,35 @@ signaldisplay bounds(802, 50, 131, 111), , channel("signaldisplay14"), displayTy
 ;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
 ;Waveform Modulator GUI elements - 210 pixels apart
-groupbox bounds(70, 238, 195, 430) channel("wftablegroup") text("Waveform Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
+groupbox bounds(70, 238, 195, 430) channel("wftablegroup") text("Waveform Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("wfwavelabel") text("Wave") fontStyle("plain") parent("wftablegroup")
 label bounds(80, 30, 50, 10) channel("wfamplabel") text("Amp") fontStyle("plain") parent("wftablegroup")
 label bounds(130, 30, 50, 10) channel("wfwaitlabel") text("Wait") fontStyle("plain") parent("wftablegroup")
 hslider bounds(16, 400, 186, 25) channel("wftableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("wftablegroup")
 
 ;Pulse Width Modulator GUI elements
-groupbox bounds(490, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
+groupbox bounds(490, 238, 195, 430) channel("pwmtablegroup") text("Pulse Width Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("pwdutylabel") text("Width") fontStyle("plain") parent("pwmtablegroup")
 label bounds(80, 30, 50, 10) channel("pwamplabel") text("Amp") fontStyle("plain") parent("pwmtablegroup")
 label bounds(130, 30, 50, 10) channel("pwwaitlabel") text("Wait") fontStyle("plain") parent("pwmtablegroup")
 hslider bounds(16, 400, 186, 25) channel("pwtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("pwmtablegroup")
 
 ;Frequency Modulator GUI elements
-groupbox bounds(280, 238, 195, 430) channel("freqtablegroup") text("Frequency Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
+groupbox bounds(280, 238, 195, 430) channel("freqtablegroup") text("Frequency Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("freqfreqlabel") text("Freq") fontStyle("plain") parent("freqtablegroup")
 label bounds(80, 30, 50, 10) channel("freqamplabel") text("Amp") fontStyle("plain") parent("freqtablegroup")
 label bounds(130, 30, 50, 10) channel("freqwaitlabel") text("Wait") fontStyle("plain") parent("freqtablegroup")
 hslider bounds(16, 400, 186, 25) channel("freqtableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("freqtablegroup")
 
 ;Filter Table Modulator GUI elements
-groupbox bounds(700, 238, 195, 430) channel("filttablegroup") text("Filter Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
+groupbox bounds(700, 238, 195, 430) channel("filttablegroup") text("Filter Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("filtdutylabel") text("Freq") fontStyle("plain") parent("filttablegroup")
 label bounds(80, 30, 50, 10) channel("filtamplabel") text("Amp") fontStyle("plain") parent("filttablegroup")
 label bounds(130, 30, 50, 10) channel("filtwaitlabel") text("Wait") fontStyle("plain") parent("filttablegroup")
 hslider bounds(16, 400, 186, 25) channel("filttableselect") range(0, 31, 0, 1, 1) text("Table N.") valueTextBox(1) trackerColour(0, 0, 0, 255) colour(255, 0, 0, 255) parent("filttablegroup")
 
 ;Filter & Control Table Modulator GUI elements
-groupbox bounds(910, 238, 195, 430) channel("fctltablegroup") text("Filter & Control Modulator") outlineColour(16, 16, 16, 255) outlineThickness(3)
+groupbox bounds(910, 238, 195, 430) channel("fctltablegroup") text("Filter & Control Modulator") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
 label bounds(32, 30, 50, 10) channel("filttpyelabel") text("Type") fontStyle("plain") parent("fctltablegroup")
 label bounds(80, 30, 50, 10) channel("filtReslabel") text("Reso") fontStyle("plain") parent("fctltablegroup")
 label bounds(130, 30, 50, 10) channel("filtwaitlabel") text("Wait") fontStyle("plain") parent("fctltablegroup")
@@ -91,8 +91,9 @@ hslider bounds(16, 400, 186, 25) channel("fctltableselect") range(0, 31, 0, 1, 1
 label bounds(970, 52, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
 
 ;Things that I'm testing
-filebutton bounds(686, 164, 80, 20) channel("filebutton10046") text("Load Presets")
-button bounds(686, 188, 80, 40) channel("button10047")
+groupbox bounds(546, 12, 180, 122) channel("wibble") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
+filebutton bounds(24, 24, 80, 20) channel("filebutton10046") text("Load Presets") parent("wibble")
+button bounds(24, 74, 80, 40) channel("button10047") parent("wibble")
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
@@ -341,7 +342,7 @@ instr SYNTH
 			endif
 			if kPWIndexOld != kPWTableIndex then
 				SWidgetChannel = sprintfk("pwdatarow%d", kPWIndexOld)
-    			cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    			cabbageSet(1, SWidgetChannel, "colour", 0, 0, 170, 255)
     		endif
 			SWidgetChannel = sprintfk("pwdatarow%d", kPWTableIndex)
     		cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
@@ -364,7 +365,7 @@ instr SYNTH
 			kFREQ += gkFREQTable01[kTabNum+kFREQTableIndex][1]
 			if kFREQIndexOld != kFREQTableIndex then
 				SWidgetChannel = sprintfk("freqdatarow%d", kFREQIndexOld)
-    			cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    			cabbageSet(1, SWidgetChannel, "colour", 0, 0, 170, 255)
     		endif
 				SWidgetChannel = sprintfk("freqdatarow%d", kFREQTableIndex)
     			cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
@@ -384,7 +385,7 @@ instr SYNTH
 					kWaveform = gkWFTable01[kTabNum+kWFTableIndex][0]
 					if kWFIndexOld != kWFTableIndex then
 						SWidgetChannel = sprintfk("wfdatarow%d", kWFIndexOld)
-    					cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    					cabbageSet(1, SWidgetChannel, "colour", 0, 0, 170, 255)
     				endif
 					SWidgetChannel = sprintfk("wfdatarow%d", kWFTableIndex)
     				cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
@@ -411,7 +412,7 @@ instr SYNTH
 				endif
 				if kFILTIndexOld != kFILTTableIndex then
 					SWidgetChannel = sprintfk("filtdatarow%d", kFILTIndexOld)
-    				cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    				cabbageSet(1, SWidgetChannel, "colour", 0, 0, 170, 255)
     			endif
 				SWidgetChannel = sprintfk("filtdatarow%d", kFILTTableIndex)
     			cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
@@ -432,7 +433,7 @@ instr SYNTH
 					kFCResonance = gkFCTLTable01[kTabNum+kFCTableIndex][1]
 					if kFCIndexOld != kFCTableIndex then
 						SWidgetChannel = sprintfk("fctldatarow%d", kFCIndexOld)
-    					cabbageSet(1, SWidgetChannel, "colour", 64, 64, 46, 128)
+    					cabbageSet(1, SWidgetChannel, "colour", 0, 0, 170, 255)
     				endif
 					SWidgetChannel = sprintfk("fctldatarow%d", kFCTableIndex)
     				cabbageSet(1, SWidgetChannel, "colour", 255, 255, 255, 64)
@@ -519,7 +520,7 @@ instr GUI
 	; Three separate bold with each colum separate as colums may have a range of limits and increments specific to it.	
     iY init 0
     while iY < 16 do
-    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"pwdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"pwmtablegroup\") colour(0, 0, 170, 255) fontColour(0, 136, 255, 255)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
 		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"pwdataentry%d-0\"), range(-1,4095,0,1,1), colour(128, 128, 128, 8) parent(\"pwmtablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
@@ -533,7 +534,7 @@ instr GUI
 	; Set-up Frequency Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"freqdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"freqtablegroup\") colour(0, 0, 170, 255) fontColour(0, 136, 255, 255)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
 		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"freqdataentry%d-0\"), range(-1,65535,0,1,1), colour(28, 128, 128, 8) parent(\"freqtablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
@@ -547,7 +548,7 @@ instr GUI
 	; Set-up Waveform Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"wfdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"wftablegroup\") colour(0, 0, 170, 255) fontColour(0, 136, 255, 255)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
 		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"wfdataentry%d-0\"), range(-1,65535,0,1,1), colour(28, 128, 128, 8) parent(\"wftablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
@@ -561,7 +562,7 @@ instr GUI
 	; Set-up Filter Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"filtdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"filttablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"filtdatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"filttablegroup\") colour(0, 0, 170, 255) fontColour(0, 136, 255, 255)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
 		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"filtdataentry%d-0\"), range(-1,65535,0,1,1), colour(28, 128, 128, 8) parent(\"filttablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
@@ -575,7 +576,7 @@ instr GUI
 	; Set-up Filter and Control Modulation GUI elements
     iY init 0
     while iY < 16 do
-    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"fctldatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"fctltablegroup\") colour(64,64,64,128)", 12, 48+iY*22, iY, iY)
+    	SWidget = sprintf("bounds(%d, %d, 16, 12), channel(\"fctldatarow%d\"), text(\"%d\") fontStyle(\"plain\") align(\"right\") parent(\"fctltablegroup\") colour(0, 0, 170, 255) fontColour(0, 136, 255, 255)", 12, 48+iY*22, iY, iY)
     	cabbageCreate("label", SWidget)
 		SWidget = sprintf("bounds(%d, %d, 50, 22), channel(\"fctldataentry%d-0\"), range(-1,65535,0,1,1), colour(28, 128, 128, 8) parent(\"fctltablegroup\")", -18+1*50, 42+iY*22, iY)
 		cabbageCreate("nslider", SWidget)
