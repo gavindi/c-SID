@@ -25,13 +25,11 @@ image bounds(860, 4, 475, 68) channel("image10032") file("c-SIDLogo-01.png")
 image bounds(772, 6, 340, 232) channel("image10030") file("1576596860commodoor64andtv.svg")
 
 ;Volume Related
-vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(16, 128, 16) outlineThickness(3)
-rslider bounds(4, 238, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255)
+vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(170, 255, 102, 255) outlineThickness(3)
+rslider bounds(4, 238, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255) trackerColour(170, 255, 102, 255)
 
 ;Manual adjusters
 groupbox bounds(304, 8, 228, 224) channel("adjustersgroup1") text("Adjusters") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
-nslider bounds(106, 36, 100, 22) channel("nslider10038") range(0, 100, 0, 1, 0) valueTextBox(1)   colour(0, 0, 128, 8) text("Preset") textColour(66, 171, 41, 255) parent("adjustersgroup1")
-combobox bounds(6, 36, 80, 22) channel("combo10039") channelType("string") value("0") parent("adjustersgroup1")
 hslider bounds(6, 76, 216, 50) channel("V1Waveform") range(0, 128, 16, 1, 16) valueTextBox(1) text("Waveform") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(170, 255, 102, 255) parent("adjustersgroup1")
 hslider bounds(6, 106, 216, 50) channel("V1PulseWidth") range(1, 4096, 2048, 1, 1) valueTextBox(1) text("PulseWidth") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 0, 255) colour(170, 255, 102, 255) parent("adjustersgroup1")
 hslider bounds(6, 136, 216, 50) channel("V1Frequency") range(1, 4096, 0, 1, 1) valueTextBox(1) text("Frequency") textColour(255, 255, 255, 255) fontColour(255, 255, 255, 255) trackerColour(0, 0, 255, 255) colour(170, 255, 102, 255) parent ("adjustersgroup1")
@@ -45,8 +43,8 @@ vslider bounds(114, 30, 50, 180) channel("V1EnvSustain") range(1, 15, 6, 1, 1) t
 vslider bounds(164, 30, 50, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(238, 238, 119, 255) trackerColour(170, 255, 102, 255) parent("envelopegroup1")
 
 ;Display
-groupbox bounds(800, 48, 134, 115) channel("waveformdisp01") text("Oscilloscope")  outlineColour(16, 128, 16, 255) outlineThickness(3) colour(0, 8, 0, 255)
-signaldisplay bounds(802, 50, 131, 111), , channel("signaldisplay14"), displayType("waveform"), signalVariable ("aMix"), colour:0(0, 255, 0, 255), , zoom(0), , colour(0, 255, 0, 255)
+groupbox bounds(800, 48, 134, 111) channel("waveformdisp01") text("Oscilloscope")  outlineColour(51, 51, 51, 255) outlineThickness(3) colour(0, 8, 0, 255)
+signaldisplay bounds(800, 48, 134, 111), , channel("signaldisplay14"), displayType("waveform"), signalVariable ("aMix"), colour:0(0, 255, 0, 255), , zoom(-1), , colour(0, 255, 0, 255)
 ;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
 ;Waveform Modulator GUI elements - 210 pixels apart
@@ -90,9 +88,14 @@ hslider bounds(16, 400, 186, 25) channel("fctltableselect") range(0, 31, 0, 1, 1
 label bounds(970, 52, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
 
 ;Things that I'm testing
-groupbox bounds(546, 12, 180, 122) channel("wibble") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255)
-filebutton bounds(24, 24, 80, 20) channel("filebutton10046") text("Load Presets") parent("wibble")
-button bounds(24, 74, 80, 40) channel("button10047") parent("wibble")
+groupbox bounds(546, 12, 180, 122) channel("wibble") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255) text("Preset")
+;filebutton bounds(24, 24, 80, 20) channel("filebutton10046") text("Load Presets") parent("wibble")
+;button bounds(24, 74, 80, 40) channel("button10047") parent("wibble")
+;nslider bounds(106, 36, 100, 22) channel("nslider10038") range(0, 100, 0, 1, 0) valueTextBox(1)   colour(0, 0, 128, 8) text("Preset") textColour(66, 171, 41, 255) parent("adjustersgroup1")
+;combobox bounds(6, 36, 80, 22) channel("combo10039") channelType("string") value("0") parent("adjustersgroup1")
+filebutton bounds(12, 80, 60, 25), text("Save"), populate("*.snaps", "test"), mode("named preset") parent("wibble") colour:0(0, 204, 85, 192)
+filebutton bounds(106, 80, 60, 25), text("Remove"), populate("*.snaps", "test"), mode("remove preset") parent("wibble") colour:0(136, 0, 0, 192)
+combobox bounds(12, 40, 156, 25), populate("*.snaps"), channelType("string") parent("wibble") colour:0(0, 80, 170, 255)
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
@@ -172,7 +175,7 @@ gkFILTTable01 = fillarray(4000, 0, 17,
 						0, 0, -1)
 						
 gkFCTLTable01[][] init 512,3
-gkFCTLTable01 = fillarray(0, 0, -1)
+gkFCTLTable01 = fillarray(16, 0, -1)
 
 ; - SID Control Register Waveforms & Controls
 giGATE = 1
@@ -212,15 +215,50 @@ gkPresetConfig = fillarray(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ;massign 0,2
 ;maxalloc 3,1
 ;hdf5write("waffles.preset", gSPresetName)
-hdf5write("cSID.presets", gkPresetConfig, gkPWTable01, gkFREQTable01, gkWFTable01, gkFILTTable01, gkFCTLTable01)
-
+;hdf5write "cSID.presets", gkPresetConfig, gkPWTable01, gkFREQTable01, gkWFTable01, gkFILTTable01, gkFCTLTable01
+;gkPresetConfig[], gkPWTable01[], gkFREQTable01[], gkWFTable01[], gkFILTTable01[], gkFCTLTable01[] hdf5read "cSID.presets", "gkPresetConfig", "gkPWTable01", "gkFREQTable01", "gkWFTable01", "gkFILTTable01", "gkFCTLTable01"
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+opcode GUITableRefresh, 0, 0
+	; Populate the widgets from the table arrays.
+	iY init 0
+	while iY < 16 do
+		iX init 0
+		while iX < 3 do
+			kTabNum = gkPresetConfig[gkPresetNumber][10]*16
+			SWidgetChannel = sprintf("pwdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkPWTable01,i(kTabNum)+iY,iX))
+			
+			kTabNum = gkPresetConfig[gkPresetNumber][9]*16
+			SWidgetChannel = sprintf("freqdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkFREQTable01,i(kTabNum)+iY,iX))
+			
+			kTabNum = gkPresetConfig[gkPresetNumber][8]*16
+			SWidgetChannel = sprintf("wfdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkWFTable01,i(kTabNum)+iY,iX))
+			
+			kTabNum = gkPresetConfig[gkPresetNumber][11]*16
+			SWidgetChannel = sprintf("filtdataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkFILTTable01,i(kTabNum)+iY,iX))
+			
+			kTabNum = gkPresetConfig[gkPresetNumber][12]*16
+			SWidgetChannel = sprintf("fctldataentry%d-%d", iY, iX)
+			cabbageSetValue(SWidgetChannel, i(gkFCTLTable01,i(kTabNum)+iY,iX))
+			
+			iX += 1
+		od
+       	iY += 1
+	od
+endop
+/*
+opcode SaveDataTables, 0, 0
+	hdf5write("cSID.presets", gkPresetConfig, gkPWTable01, gkFREQTable01, gkWFTable01, gkFILTTable01, gkFCTLTable01)
+endop
+*/
 opcode FirstEl, k, k[]
 	kArr[] xin
 	kOut = kArr[0]
 	xout kOut
 endop
-
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;instr    2                                ; RESPOND TO MIDI NOTES
 ;	icps = cpsmidi()
@@ -273,7 +311,7 @@ instr SYNTH
 	kWFRepeatCounter init 0
 	kWF init 0
 	
-	; Frequency Modulator
+	; Filter Frequency Modulator
 	kFILTTableIndex init -1
 	kFILTIndexOld init 0
 	kFILTDelayCounter init 0
@@ -476,7 +514,8 @@ instr SYNTH
 	
 	;Apply Filter
 	if (kFCFiltType & giLowPass) != 0 then
-	
+		aFilt = rezzy(aOut, kFilterFreq, kFCResonance)
+		aOut = aFilt
 	endif
 	
 	if (kFCFiltType & giBandPass) != 0 then
@@ -511,6 +550,7 @@ instr SYNTH
 	cabbageSetValue("V1Waveform", kWaveform, changed:k(kWaveform))
 	cabbageSetValue("V1PulseWidth", kPulseWidth, changed(kPulseWidth))
 	cabbageSetValue("vMeter1", kEnv, changed(kEnv))
+	cabbageSetValue("V1FiltFreq", kFREQ, changed(kFREQ))
 
 endin
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -587,37 +627,12 @@ instr GUI
 	od
 	
 	; Populate the widgets from the table arrays.
-	iY init 0
-	while iY < 16 do
-		iX init 0
-		while iX < 3 do
-			kTabNum = gkPresetConfig[gkPresetNumber][10]*16
-			SWidgetChannel = sprintf("pwdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkPWTable01,i(kTabNum)+iY,iX))
-			
-			kTabNum = gkPresetConfig[gkPresetNumber][9]*16
-			SWidgetChannel = sprintf("freqdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkFREQTable01,i(kTabNum)+iY,iX))
-			
-			kTabNum = gkPresetConfig[gkPresetNumber][8]*16
-			SWidgetChannel = sprintf("wfdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkWFTable01,i(kTabNum)+iY,iX))
-			
-			kTabNum = gkPresetConfig[gkPresetNumber][11]*16
-			SWidgetChannel = sprintf("filtdataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkFILTTable01,i(kTabNum)+iY,iX))
-			
-			kTabNum = gkPresetConfig[gkPresetNumber][12]*16
-			SWidgetChannel = sprintf("fctldataentry%d-%d", iY, iX)
-			cabbageSetValue(SWidgetChannel, i(gkFCTLTable01,i(kTabNum)+iY,iX))
-			
-			iX += 1
-		od
-       	iY += 1
-	od
+	GUITableRefresh()
 	
-	; Runtime updating of the tables from the widgets.
+	; Run loop
     if metro(2) == 1 then
+    
+    	; Runtime updating of the tables from GUI widgets.
 		kY = 0
     	while kY < 16 do
     		kX = 0
@@ -657,6 +672,8 @@ instr GUI
         	kY += 1
     	od   
     	kY = 0
+    
+    ;End Run loop
     endif
 endin
 
