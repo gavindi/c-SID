@@ -18,14 +18,14 @@
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <Cabbage>
 openGL(0)
-form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0, 0, 32, 255), typeface("PetMe642Y.ttf") titleBarColour(0, 0, 170, 255)
+form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(53, 40, 121, 255), typeface("PetMe642Y.ttf") titleBarColour(0, 0, 170, 255)
 ;form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255) openGL(0)
 keyboard bounds(1, 702, 11199, 95) channel("keyboard") scrollbars(1) middleC(3)
-image bounds(860, 4, 475, 68) channel("image10032") file("c-SIDLogo-01.png")
+
 image bounds(772, 6, 340, 232) channel("image10030") file("1576596860commodoor64andtv.svg")
 
 ;Volume Related
-vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(23, 0, 123, 255) outlineColour(170, 255, 102, 255) outlineThickness(3)
+vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(0, 0, 170, 255) outlineColour(170, 255, 102, 255) outlineThickness(3)
 rslider bounds(4, 238, 60, 60) channel("mastervolume") range(0, 15, 15, 1, 0.001) text("Volume") valueTextBox(1) outlineColour(16, 16, 16, 255) trackerColour(170, 255, 102, 255)
 
 ;Manual adjusters
@@ -85,7 +85,7 @@ hslider bounds(16, 400, 186, 25) channel("fctltableselect") range(0, 31, 0, 1, 1
 ;Control Table Modulator GUI elements
 // Placeholder
 
-label bounds(970, 52, 152, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
+label bounds(556, 176, 150, 13) channel("vanity01") text("Gavin Graham (c) 2022") align("right") fontColour(32, 32, 32, 255)
 
 ;Things that I'm testing
 groupbox bounds(546, 12, 180, 122) channel("wibble") outlineColour(0, 136, 255, 255) outlineThickness(3) colour(0, 0, 170, 255) text("Preset")
@@ -96,6 +96,8 @@ groupbox bounds(546, 12, 180, 122) channel("wibble") outlineColour(0, 136, 255, 
 filebutton bounds(12, 80, 60, 25), text("Save"), populate("*.snaps", "test"), mode("named preset") parent("wibble") colour:0(0, 204, 85, 192)
 filebutton bounds(106, 80, 60, 25), text("Remove"), populate("*.snaps", "test"), mode("remove preset") parent("wibble") colour:0(136, 0, 0, 192)
 combobox bounds(12, 40, 156, 25), populate("*.snaps"), channelType("string") parent("wibble") colour:0(0, 80, 170, 255)
+button bounds(340, 50, 32, 32) channel("button10047") imgFile("On", "TRILight.svg") imgFile("Off", "TRILight.svg") text("")
+image bounds(556, 136, 160, 43) channel("image10048") file("csid.png") outlineColour(0, 0, 0, 255) outlineThickness(-1)
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg10792"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="TRILight.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview10794"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.84051978"
+     inkscape:cx="488.98314"
+     inkscape:cy="524.08047"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs10789">
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter6050"
+       x="-0.13868661"
+       y="-0.18678635"
+       width="1.276901"
+       height="1.3380933">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.5344223"
+         id="feGaussianBlur6052" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#0088ff;fill-opacity:1;stroke:#0000ff;stroke-width:0.705556;stroke-linecap:round;stroke-opacity:1"
+       id="rect2050-1-1-2"
+       width="22.577778"
+       height="22.577778"
+       x="78.424942"
+       y="114.94005" />
+    <path
+       style="fill:none;stroke:#fffeff;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 81.341902,134.02943 8.599181,-15.16264 8.140142,15.29087"
+       id="path2200-1"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#f6ffff;stroke-width:4.25197;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter6050)"
+       d="m -339.33636,140.03423 24.37563,-42.980713 23.07441,43.344183"
+       id="path2200-1-4"
+       sodipodi:nodetypes="ccc"
+       transform="matrix(0.35277777,0,0,0.35277777,201.05223,84.628468)" />
+  </g>
+</svg>
