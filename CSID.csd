@@ -43,8 +43,8 @@ vslider bounds(114, 30, 50, 180) channel("V1EnvSustain") range(1, 15, 6, 1, 1) t
 vslider bounds(164, 30, 50, 180) channel("V1EnvRelease") range(0, 15, 9, 1, 1) text("Release") textColour(255, 255, 255, 255) valueTextBox(1) colour(238, 238, 119, 255) trackerColour(170, 255, 102, 255) parent("envelopegroup1")
 
 ;Display
-groupbox bounds(800, 48, 134, 111) channel("waveformdisp01") text("Oscilloscope")  outlineColour(51, 51, 51, 255) outlineThickness(3) colour(0, 8, 0, 255)
-signaldisplay bounds(800, 48, 134, 111), , channel("signaldisplay14"), displayType("waveform"), signalVariable ("aMix"), colour:0(0, 255, 0, 255), , zoom(-1), , colour(0, 255, 0, 255)
+groupbox bounds(800, 48, 134, 111) channel("waveformdisp01") text("Oscilloscope") outlineColour(51, 51, 51, 255) outlineThickness(3) colour(0, 8, 0, 255)
+signaldisplay bounds(800, 48, 134, 111) channel("signaldisplay14") displayType("waveform") signalVariable ("aMix") colour:0(0, 255, 0, 255) zoom(-1) colour(0, 255, 0, 255) updateRate(16)
 ;gentable bounds(464, 8, 331, 224)   tableNumber(16.0) fill(0) 
 
 ;Waveform Modulator GUI elements - 210 pixels apart
@@ -93,11 +93,11 @@ groupbox bounds(546, 12, 180, 122) channel("wibble") outlineColour(0, 136, 255, 
 ;button bounds(24, 74, 80, 40) channel("button10047") parent("wibble")
 ;nslider bounds(106, 36, 100, 22) channel("nslider10038") range(0, 100, 0, 1, 0) valueTextBox(1)   colour(0, 0, 128, 8) text("Preset") textColour(66, 171, 41, 255) parent("adjustersgroup1")
 ;combobox bounds(6, 36, 80, 22) channel("combo10039") channelType("string") value("0") parent("adjustersgroup1")
-filebutton bounds(12, 80, 60, 25), text("Save"), populate("*.snaps", "test"), mode("named preset") parent("wibble") colour:0(0, 204, 85, 192)
-filebutton bounds(106, 80, 60, 25), text("Remove"), populate("*.snaps", "test"), mode("remove preset") parent("wibble") colour:0(136, 0, 0, 192)
-combobox bounds(12, 40, 156, 25), populate("*.snaps"), channelType("string") parent("wibble") colour:0(0, 80, 170, 255)
-button bounds(340, 50, 32, 32) channel("button10047") imgFile("On", "TRILight.svg") imgFile("Off", "TRILight.svg") text("")
-image bounds(556, 136, 160, 43) channel("image10048") file("csid.png") outlineColour(0, 0, 0, 255) outlineThickness(-1)
+filebutton bounds(12, 80, 60, 25), text("Save"), populate("*.snaps", "CSID"), mode("named preset") parent("wibble") colour:0(0, 204, 85, 192) automatable(0)
+filebutton bounds(106, 80, 60, 25), text("Remove"), populate("*.snaps", "CSID"), mode("remove preset") parent("wibble") colour:0(136, 0, 0, 192) automatable(0)
+combobox bounds(12, 40, 156, 25), populate("*.snaps", "CSID"), channelType("string") parent("wibble") colour:0(0, 80, 170, 255) automatable(0) text("") presetIgnore(1) channel("PresetSelect")
+button bounds(340, 50, 32, 32) channel("button10047") imgFile("On", "TRILight.svg") imgFile("Off", "TRILight.svg") text("") automatable(0)
+image bounds(556, 136, 160, 43) channel("image10048") file("csid.png") outlineColour(0, 0, 0, 255) outlineThickness(-1) automatable(0)
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
