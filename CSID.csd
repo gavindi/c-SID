@@ -1,4 +1,4 @@
- //  ---------------------------------------------------------------------------
+//  ---------------------------------------------------------------------------
 //  This file is part of c-SID, a MOS6581 SID music routine as a VST.
 //  Copyright (C) 2022  Gavin Graham <gavindi@gmail.com>
 //
@@ -17,12 +17,11 @@
 //  ---------------------------------------------------------------------------
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <Cabbage>
-openGL(0)
+openGL(1)
 form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(53, 40, 121, 255), typeface("PetMe642Y.ttf") titleBarColour(0, 0, 170, 255)
 ;form caption("c-SID") size(1120, 800), guiMode("queue"), pluginId("CSID"), colour(0,0,32,255) openGL(0)
 keyboard bounds(1, 702, 11199, 95) channel("keyboard") scrollbars(1) middleC(3)
-
-image bounds(772, 6, 340, 232) channel("image10030") file("1576596860commodoor64andtv.svg")
+image bounds(772, 6, 340, 232) channel("OSCDisplayImg") file("1576596860commodoor64andtv.svg")
 
 ;Volume Related
 vmeter bounds(18, 8, 35, 224) channel("vMeter1") overlayColour(0, 0, 0, 255) meterColour:0(0, 255, 0, 255) meterColour:1(0, 103, 171, 255) meterColour:2(0, 0, 170, 255) outlineColour(170, 255, 102, 255) outlineThickness(3)
@@ -98,6 +97,7 @@ filebutton bounds(106, 80, 60, 25), text("Remove"), populate("*.snaps", "CSID"),
 combobox bounds(12, 40, 156, 25), populate("*.snaps", "CSID"), channelType("string") parent("wibble") colour:0(0, 80, 170, 255) automatable(0) text("") presetIgnore(1) channel("PresetSelect")
 button bounds(340, 50, 32, 32) channel("button10047") imgFile("On", "TRILight.svg") imgFile("Off", "TRILight.svg") text("") automatable(0)
 image bounds(556, 136, 160, 43) channel("image10048") file("csid.png") outlineColour(0, 0, 0, 255) outlineThickness(-1) automatable(0)
+button bounds(733, 191, 16, 16) channel("button10048") colour:0(0, 204, 85, 192) automatable(0) text("c")
 </Cabbage>
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 <CsoundSynthesizer>
@@ -167,7 +167,35 @@ gkWFTable01[][] init 512,3
 gkWFTable01 = fillarray(16, 0, 2,
 						64, 0, 10,
 						-1, 1, 0,
-						0, 0, -1)
+						0, 0, -1,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						1, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0,
+						0, 0, 0)
 
 gkFILTTable01[][] init 512,3
 gkFILTTable01 = fillarray(4000, 0, 17,
@@ -219,8 +247,11 @@ gkPresetConfig = fillarray(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ;hdf5write("waffles.preset", gSPresetName)
 ;hdf5write "cSID.presets", gkPresetConfig, gkPWTable01, gkFREQTable01, gkWFTable01, gkFILTTable01, gkFCTLTable01
 ;gkPresetConfig[], gkPWTable01[], gkFREQTable01[], gkWFTable01[], gkFILTTable01[], gkFCTLTable01[] hdf5read "cSID.presets", "gkPresetConfig", "gkPWTable01", "gkFREQTable01", "gkWFTable01", "gkFILTTable01", "gkFCTLTable01"
+hdf5write "cSIDFreqTable.presets", gkFREQTable01
+;gkFREQTable01[] hdf5read "cSIDFreqTable.presets", "gkFREQTable01"
+
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-opcode GUITableRefresh, 0, 0
+opcode GUITableInit, 0, 0
 	; Populate the widgets from the table arrays.
 	iY init 0
 	while iY < 16 do
@@ -251,6 +282,7 @@ opcode GUITableRefresh, 0, 0
        	iY += 1
 	od
 endop
+
 /*
 opcode SaveDataTables, 0, 0
 	hdf5write("cSID.presets", gkPresetConfig, gkPWTable01, gkFREQTable01, gkWFTable01, gkFILTTable01, gkFCTLTable01)
@@ -557,6 +589,7 @@ instr SYNTH
 endin
 ;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 instr GUI
+	;printarray gkFREQTable01
 	; Set-up Pulse Width Modulation GUI Elements
 	; Three separate bold with each colum separate as colums may have a range of limits and increments specific to it.	
     iY init 0
@@ -629,7 +662,7 @@ instr GUI
 	od
 	
 	; Populate the widgets from the table arrays.
-	GUITableRefresh()
+	GUITableInit()
 	
 	; Run loop
     if metro(2) == 1 then
@@ -673,7 +706,83 @@ instr GUI
 			od
         	kY += 1
     	od   
-    	kY = 0
+    	
+    	; Update Table from Selectors
+    	if changed(cabbageGetValue("pwtableselect")) == 1 then
+    		gkPresetConfig[gkPresetNumber][10] = cabbageGetValue("pwtableselect")
+    		kTabNum = gkPresetConfig[gkPresetNumber][10] * 16
+    			kY = 0
+				while kY < 16 do
+					kX = 0
+					while kX < 3 do	
+						SWidgetChannel = sprintfk("pwdataentry%d-%d", kY, kX)
+						cabbageSetValue(SWidgetChannel,gkPWTable01[kTabNum+kY][kX])
+						kX += 1
+					od
+       				kY += 1
+				od
+    	endif
+    	if changed(cabbageGetValue("freqtableselect")) == 1 then
+    		gkPresetConfig[gkPresetNumber][9] = cabbageGetValue("freqtableselect")
+    		kTabNum = gkPresetConfig[gkPresetNumber][9] * 16
+    			kY = 0
+				while kY < 16 do
+					kX = 0
+					while kX < 3 do	
+						SWidgetChannel = sprintfk("freqdataentry%d-%d", kY, kX)
+						cabbageSetValue(SWidgetChannel,gkFREQTable01[kTabNum+kY][kX])
+						kX += 1
+					od
+       				kY += 1
+				od
+    	endif
+    	if changed(cabbageGetValue("wftableselect")) == 1 then
+    		gkPresetConfig[gkPresetNumber][8] = cabbageGetValue("wftableselect")
+    		kTabNum = gkPresetConfig[gkPresetNumber][8] * 16
+    			kY = 0
+				while kY < 16 do
+					kX = 0
+					while kX < 3 do	
+						SWidgetChannel = sprintfk("wfdataentry%d-%d", kY, kX)
+						cabbageSetValue(SWidgetChannel,gkWFTable01[kTabNum+kY][kX])
+						kX += 1
+					od
+       				kY += 1
+				od
+    	endif
+    	if changed(cabbageGetValue("filttableselect")) == 1 then
+    		gkPresetConfig[gkPresetNumber][11] = cabbageGetValue("filttableselect")
+    		kTabNum = gkPresetConfig[gkPresetNumber][11] * 16
+    			kY = 0
+				while kY < 16 do
+					kX = 0
+					while kX < 3 do	
+						SWidgetChannel = sprintfk("filtdataentry%d-%d", kY, kX)
+						cabbageSetValue(SWidgetChannel,gkFILTTable01[kTabNum+kY][kX])
+						kX += 1
+					od
+       				kY += 1
+				od
+    	endif
+    	if changed(cabbageGetValue("fctltableselect")) == 1 then
+    		gkPresetConfig[gkPresetNumber][12] = cabbageGetValue("fctltableselect")
+    		kTabNum = gkPresetConfig[gkPresetNumber][12] * 16
+    			kY = 0
+				while kY < 16 do
+					kX = 0
+					while kX < 3 do	
+						SWidgetChannel = sprintfk("fctldataentry%d-%d", kY, kX)
+						cabbageSetValue(SWidgetChannel,gkFCTLTable01[kTabNum+kY][kX])
+						kX += 1
+					od
+       				kY += 1
+				od
+    	endif
+    
+    	if changed(cabbageGetValue("button10048")) == 1 then
+    		cabbageSetValue("button10048", 0)
+    		prints "Hi"
+    	endif
     
     ;End Run loop
     endif
